@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha — Tempo · Os 3 Caídos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;700&display=swap');
+:root{
+  --el:#6de8a8;--el-d:rgba(109,232,168,.08);--el-b:rgba(109,232,168,.28);--el-g:rgba(109,232,168,.5);
+  --bg:#07070d;--bg2:#0b0b14;--bg3:#0f0f1c;--bg4:#13131f;
+  --card:rgba(10,10,20,.98);
+  --br:rgba(255,255,255,.055);--br2:rgba(255,255,255,.11);
+  --tx:#ccc9e0;--tx2:#7a7898;--tx3:#3d3c55;
+  --ou:#e8c44a;--vm:#f05c5c;
+  --serif:'Cormorant Garamond',serif;
+  --display:'Cinzel Decorative',serif;
+  --mono:'JetBrains Mono',monospace;
+  --r:5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--serif);font-size:16px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.35}
+.amb{position:fixed;border-radius:50%;filter:blur(180px);pointer-events:none;z-index:0}
+.a1{width:700px;height:700px;background:var(--el);top:-300px;left:-250px;opacity:.04}
+.a2{width:400px;height:400px;background:var(--el);bottom:-150px;right:-100px;opacity:.025}
+.wrap{position:relative;z-index:2;max-width:860px;margin:0 auto;padding:40px 24px 80px}
+.hdr{display:flex;align-items:center;gap:20px;padding:28px 32px;background:var(--card);border:1px solid var(--el-b);border-radius:8px;margin-bottom:20px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--el) 40%,var(--el-g) 60%,transparent);box-shadow:0 0 16px var(--el)}
+.hdr::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 0,rgba(109,232,168,.06),transparent 55%)}
+.gem{width:44px;height:44px;border-radius:5px;transform:rotate(45deg);background:radial-gradient(135deg,#b8ffd8,var(--el),#0a5a3a);box-shadow:0 0 28px rgba(109,232,168,.5),inset 0 1px 0 rgba(255,255,255,.3);flex-shrink:0;position:relative;z-index:1}
+.hdr-text{position:relative;z-index:1}
+.el-label{font-family:var(--mono);font-size:.55rem;letter-spacing:.35em;color:var(--el);text-transform:uppercase;margin-bottom:4px}
+.el-title{font-family:var(--display);font-size:1.6rem;font-weight:900;color:var(--el);line-height:1;letter-spacing:.03em}
+.el-sub{font-family:var(--mono);font-size:.55rem;letter-spacing:.2em;color:var(--tx3);margin-top:6px;text-transform:uppercase}
+.hdr-right{margin-left:auto;text-align:right;position:relative;z-index:1}
+.sys-label{font-family:var(--mono);font-size:.5rem;letter-spacing:.3em;color:var(--tx3);text-transform:uppercase}
+.sys-name{font-family:var(--display);font-size:.7rem;color:var(--tx2);letter-spacing:.06em;margin-top:3px}
+.sec-t{font-family:var(--display);font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--el);text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:28px}
+.sec-t::before{content:'';display:block;width:20px;height:1px;background:var(--el);opacity:.5}
+.sec-t::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--el-b),transparent);opacity:.5}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;color:var(--tx3);text-transform:uppercase}
+.field input,.field textarea,.field select{background:var(--bg3);border:1px solid var(--br);border-radius:var(--r);color:var(--tx);font-family:var(--serif);font-size:.95rem;padding:9px 12px;outline:none;transition:border-color .2s;width:100%}
+.field input:focus,.field textarea:focus{border-color:var(--el-b);box-shadow:0 0 0 2px rgba(109,232,168,.08)}
+.field textarea{resize:vertical;min-height:72px;line-height:1.5}
+.stat-box{background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:border-color .2s}
+.stat-box:focus-within{border-color:var(--el-b)}
+.stat-lbl{font-family:var(--mono);font-size:.5rem;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase;text-align:center}
+.stat-val{font-family:var(--display);font-size:1.6rem;font-weight:700;color:#fff;width:48px;height:48px;background:var(--bg4);border:1px solid var(--br2);border-radius:4px;text-align:center;outline:none;transition:border-color .2s}
+.stat-val:focus{border-color:var(--el-b)}
+.stat-max{font-family:var(--mono);font-size:.55rem;color:var(--tx3)}
+.stat-desc{font-family:var(--mono);font-size:.48rem;color:var(--tx3);letter-spacing:.1em;text-align:center;line-height:1.4}
+.bar-wrap{background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:16px 18px}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bar-row:last-child{margin-bottom:0}
+.bar-label{font-family:var(--mono);font-size:.55rem;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase;min-width:80px}
+.bar-inputs{display:flex;align-items:center;gap:6px;flex:1}
+.bar-cur{font-family:var(--display);font-size:1.1rem;font-weight:700;color:#fff;width:60px;background:var(--bg4);border:1px solid var(--br2);border-radius:4px;text-align:center;padding:5px;outline:none;transition:border-color .2s}
+.bar-cur:focus{border-color:var(--el-b)}
+.bar-sep{color:var(--tx3);font-family:var(--mono)}
+.bar-max{font-family:var(--mono);font-size:.85rem;color:var(--tx2);width:70px;background:var(--bg4);border:1px solid var(--br2);border-radius:4px;text-align:center;padding:5px;outline:none}
+.bar-note{font-family:var(--mono);font-size:.52rem;color:var(--tx3);margin-left:auto}
+.derived{background:var(--bg3);border:1px solid var(--br);border-radius:var(--r);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.dv{display:flex;flex-direction:column;align-items:center;gap:3px}
+.dv-l{font-family:var(--mono);font-size:.48rem;letter-spacing:.14em;color:var(--tx3);text-transform:uppercase}
+.dv-v{font-family:var(--display);font-size:1rem;font-weight:700;width:52px;background:transparent;border:none;border-bottom:1px solid var(--br2);text-align:center;outline:none;padding:2px 0;color:#fff}
+.dv-v:focus{border-bottom-color:var(--el)}
+.dv-f{font-family:var(--mono);font-size:.5rem;color:var(--tx3);text-align:center;margin-top:1px}
+/* ── HAB TYPE FILTER PILLS ── */
+.hab-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.hfbtn{font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;padding:4px 12px;border-radius:20px;border:1px solid var(--br2);background:var(--bg3);color:var(--tx3);cursor:pointer;transition:all .18s;text-transform:uppercase}
+.hfbtn:hover{border-color:var(--el-b);color:var(--el)}
+.hfbtn.on{background:var(--el-d);border-color:var(--el-b);color:var(--el)}
+/* ── HAB BLOCK ── */
+.hab{background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:16px;margin-bottom:8px;transition:border-color .2s;position:relative;overflow:hidden}
+.hab:focus-within{border-color:var(--el-b)}
+.hab-top{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:start;margin-bottom:10px}
+.hab-nome input{background:transparent;border:none;border-bottom:1px solid var(--br2);color:#fff;font-family:var(--display);font-size:.9rem;font-weight:700;letter-spacing:.04em;outline:none;width:100%;padding:2px 0;transition:border-color .2s}
+.hab-nome input:focus{border-bottom-color:var(--el)}
+.hab-nome input::placeholder{color:var(--tx3)}
+.hab-cost{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hab-cost label{font-family:var(--mono);font-size:.48rem;letter-spacing:.14em;color:var(--tx3);text-transform:uppercase}
+.hab-cost input{background:var(--bg4);border:1px solid var(--br);border-radius:3px;color:var(--el);font-family:var(--mono);font-size:.75rem;width:64px;text-align:center;padding:4px;outline:none}
+.hab-type{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.hab-type label{font-family:var(--mono);font-size:.48rem;letter-spacing:.14em;color:var(--tx3);text-transform:uppercase}
+.hab-type select{background:var(--bg4);border:1px solid var(--br);border-radius:3px;color:var(--tx2);font-family:var(--mono);font-size:.65rem;padding:4px 6px;outline:none;cursor:pointer}
+.hab-del-btn{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:1rem;padding:2px 4px;transition:color .15s;align-self:start;margin-top:2px}
+.hab-del-btn:hover{color:var(--vm)}
+.hab-desc textarea{background:var(--bg3);border:1px solid var(--br);border-radius:3px;color:var(--tx2);font-family:var(--serif);font-size:.85rem;width:100%;padding:8px 10px;outline:none;resize:vertical;min-height:54px;line-height:1.5;transition:border-color .2s;overflow:hidden}
+.hab-desc textarea:focus{border-color:var(--el-b)}
+.hab-desc textarea{overflow-y:hidden}
+.hab-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.htag{font-family:var(--mono);font-size:.5rem;letter-spacing:.1em;padding:2px 8px;border-radius:2px;border:1px solid var(--el-b);color:var(--el);background:var(--el-d);text-transform:uppercase;cursor:pointer;transition:background .15s;user-select:none}
+.htag:hover{background:rgba(109,232,168,.15)}
+.htag.on{background:rgba(109,232,168,.25);font-weight:700}
+.marco{background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;margin-bottom:8px}
+.marco-lv{font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;color:var(--el);text-transform:uppercase;padding-top:2px;white-space:nowrap}
+.marco-body{display:flex;flex-direction:column;gap:6px}
+.marco-body input{background:transparent;border:none;border-bottom:1px solid var(--br2);color:#fff;font-family:var(--display);font-size:.82rem;font-weight:700;letter-spacing:.03em;outline:none;padding:2px 0;transition:border-color .2s}
+.marco-body input:focus{border-bottom-color:var(--el)}
+.marco-body input::placeholder{color:var(--tx3)}
+.marco-body textarea{background:var(--bg3);border:1px solid var(--br);border-radius:3px;color:var(--tx2);font-family:var(--serif);font-size:.83rem;padding:7px 10px;outline:none;resize:vertical;min-height:48px;line-height:1.5;width:100%;overflow:hidden}
+.marco-body textarea:focus{border-color:var(--el-b)}
+.marco-check{display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px}
+.marco-check label{font-family:var(--mono);font-size:.45rem;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase}
+.marco-check input[type=checkbox]{width:18px;height:18px;accent-color:var(--el);cursor:pointer}
+.corr-track{background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:16px 18px}
+.corr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.corr-val-wrap{display:flex;align-items:center;gap:10px}
+.corr-val{font-family:var(--display);font-size:1.8rem;font-weight:700;color:#fff;width:64px;background:var(--bg4);border:1px solid var(--br2);border-radius:4px;text-align:center;outline:none;padding:4px}
+.corr-val:focus{border-color:var(--el-b)}
+.corr-label{font-family:var(--mono);font-size:.6rem;letter-spacing:.18em;color:var(--tx3);text-transform:uppercase}
+.corr-dots{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.cdot{width:18px;height:18px;border-radius:50%;border:1px solid var(--br2);background:var(--bg4);cursor:pointer;transition:all .15s}
+.cdot.on{background:var(--el);border-color:var(--el);box-shadow:0 0 6px var(--el)}
+.corr-status{font-family:var(--mono);font-size:.6rem;color:var(--tx2);margin-top:10px;padding:8px 12px;background:var(--bg3);border-radius:3px;border-left:2px solid var(--el-b)}
+.inv-item{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--br)}
+.inv-item:last-child{border-bottom:none}
+.inv-item input{background:transparent;border:none;color:var(--tx);font-family:var(--serif);font-size:.9rem;outline:none;width:100%}
+.inv-item input::placeholder{color:var(--tx3)}
+.inv-qty{background:var(--bg4);border:1px solid var(--br);border-radius:3px;color:var(--tx2);font-family:var(--mono);font-size:.7rem;width:40px;text-align:center;padding:3px;outline:none}
+.inv-del{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:.9rem;padding:2px 4px;transition:color .15s}
+.inv-del:hover{color:var(--vm)}
+.notes-area{background:var(--bg3);border:1px solid var(--br);border-radius:var(--r);padding:14px;width:100%;min-height:110px;color:var(--tx);font-family:var(--serif);font-size:.9rem;line-height:1.65;outline:none;resize:vertical;transition:border-color .2s;overflow:hidden}
+.notes-area:focus{border-color:var(--el-b)}
+.status-grid{display:flex;flex-wrap:wrap;gap:7px}
+.st-chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:3px;border:1px solid var(--br);background:var(--bg3);cursor:pointer;transition:all .15s;user-select:none}
+.st-chip.on{border-color:rgba(240,92,92,.4);background:rgba(240,92,92,.08)}
+.st-chip input[type=checkbox]{accent-color:#f05c5c;width:12px;height:12px;cursor:pointer}
+.st-chip span{font-family:var(--mono);font-size:.55rem;letter-spacing:.1em;color:var(--tx2);text-transform:uppercase}
+.st-chip.on span{color:#f05c5c}
+.btn-add{background:transparent;border:1px dashed var(--br2);border-radius:var(--r);color:var(--tx3);font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;padding:9px;width:100%;cursor:pointer;text-transform:uppercase;transition:all .2s;margin-top:8px}
+.btn-add:hover{border-color:var(--el-b);color:var(--el);background:var(--el-d)}
+.info-strip{background:var(--bg3);border:1px solid var(--br);border-radius:var(--r);padding:10px 14px;font-family:var(--mono);font-size:.56rem;letter-spacing:.08em;color:var(--tx3);line-height:1.7;margin-top:8px}
+.info-strip strong{color:var(--el)}
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(7,7,13,.95);border-top:1px solid var(--br);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(12px)}
+.save-status{font-family:var(--mono);font-size:.55rem;letter-spacing:.14em;color:var(--tx3);text-transform:uppercase}
+.save-status.saved{color:var(--el)}
+.btn-save{background:var(--el-d);border:1px solid var(--el-b);border-radius:var(--r);color:var(--el);font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;padding:8px 20px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.btn-save:hover{background:rgba(109,232,168,.15);box-shadow:0 0 12px rgba(109,232,168,.2)}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}.hdr{flex-direction:column;text-align:center}.hdr-right{margin-left:0;text-align:center}.hab-top{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="amb a1"></div><div class="amb a2"></div>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="gem"></div>
+    <div class="hdr-text">
+      <div class="el-label">◈ Portador do Elemento</div>
+      <div class="el-title">Tempo</div>
+      <div class="el-sub">Suporte · Disrupção · Paradoxo</div>
+    </div>
+    <div class="hdr-right">
+      <div class="sys-label">Sistema</div>
+      <div class="sys-name">Os 3 Caídos</div>
+    </div>
+  </div>
+
+  <!-- IDENTIDADE -->
+  <div class="sec-t">Identidade</div>
+  <div class="g2" style="margin-bottom:10px">
+    <div class="field"><label>Nome do Personagem</label><input type="text" id="id-nome" placeholder="—"></div>
+    <div class="field"><label>Jogador</label><input type="text" id="id-jogador" placeholder="—"></div>
+  </div>
+  <div class="g3">
+    <div class="field"><label>Nível</label><input type="number" id="nivel-input" min="1" max="20" value="1" oninput="updateTeto();updateDerived()"></div>
+    <div class="field"><label>Pontos de Poder (PP)</label><input type="number" id="id-pp" min="0" value="0"></div>
+    <div class="field"><label>Iniciativa (Alma Corporal + 1d20)</label><input type="text" id="id-init" placeholder="Age 1º em empate"></div>
+  </div>
+
+  <!-- ATRIBUTOS -->
+  <div class="sec-t">Atributos</div>
+  <div class="info-strip" style="margin-bottom:12px"><strong>Teto atual:</strong> <span id="teto-display">5</span> por atributo. Vida e Afinidade calculadas automaticamente.</div>
+  <div class="g3">
+    <div class="stat-box">
+      <div class="stat-lbl">Cociente</div>
+      <input class="stat-val" id="atr-coq" type="number" min="0" max="25" value="1" oninput="updateDerived()">
+      <div class="stat-max">/ <span class="teto-val">5</span></div>
+      <div class="stat-desc">Percepção · Carisma · Astúcia</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-lbl">Inteligência</div>
+      <input class="stat-val" id="atr-int" type="number" min="0" max="25" value="1" oninput="updateDerived()">
+      <div class="stat-max">/ <span class="teto-val">5</span></div>
+      <div class="stat-desc">Magia · Raciocínio · Estratégia</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-lbl">Físico de Batalha</div>
+      <input class="stat-val" id="atr-fdb" type="number" min="0" max="25" value="1" oninput="updateDerived()">
+      <div class="stat-max">/ <span class="teto-val">5</span></div>
+      <div class="stat-desc">Força · Técnica · Intimidação</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-lbl">Físico Corporal</div>
+      <input class="stat-val" id="atr-fco" type="number" min="0" max="25" value="1" oninput="updateDerived()">
+      <div class="stat-max">/ <span class="teto-val">5</span></div>
+      <div class="stat-desc">Resistência · Vitalidade · Endurance</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-lbl">Alma Corporal</div>
+      <input class="stat-val" id="atr-alc" type="number" min="0" max="25" value="1" oninput="updateDerived()">
+      <div class="stat-max">/ <span class="teto-val">5</span></div>
+      <div class="stat-desc">Destreza · Agilidade · Furtividade</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-lbl">Alma Mental</div>
+      <input class="stat-val" id="atr-alm" type="number" min="0" max="25" value="1" oninput="updateDerived()">
+      <div class="stat-max">/ <span class="teto-val">5</span></div>
+      <div class="stat-desc">Sabedoria · Vontade · Liderança</div>
+    </div>
+  </div>
+
+  <!-- STATS DERIVADOS -->
+  <div class="sec-t">Estatísticas Derivadas</div>
+  <div class="derived">
+    <div class="dv">
+      <div class="dv-l">Defesa</div>
+      <input class="dv-v" id="der-def" type="number" value="14" readonly>
+      <div class="dv-f">13 + Fís. Batalha</div>
+    </div>
+    <div class="dv">
+      <div class="dv-l">Resistência</div>
+      <input class="dv-v" id="der-res" type="number" value="15" readonly>
+      <div class="dv-f">14 + Alma Mental</div>
+    </div>
+    <div class="dv">
+      <div class="dv-l">Vida Máx.</div>
+      <input class="dv-v" id="der-vida" type="number" value="22" readonly>
+      <div class="dv-f">12 + (Fís.Corp × 10)</div>
+    </div>
+    <div class="dv">
+      <div class="dv-l">Afi. Máxima</div>
+      <input class="dv-v" id="der-afi-max" type="number" value="30" readonly>
+      <div class="dv-f">Base nv + (Int × 5)</div>
+    </div>
+    <div class="dv">
+      <div class="dv-l">Afi/Turno</div>
+      <input class="dv-v" id="afi-turno-display" type="number" value="10" readonly>
+      <div class="dv-f">limite por turno</div>
+    </div>
+    <div class="dv">
+      <div class="dv-l">Movimento</div>
+      <input class="dv-v" id="der-mov" type="number" value="6">
+      <div class="dv-f">metros base</div>
+    </div>
+  </div>
+
+  <!-- PV & AFINIDADE -->
+  <div class="sec-t">Vida & Afinidade</div>
+  <div class="bar-wrap">
+    <div class="bar-row">
+      <div class="bar-label">⚔ Vida</div>
+      <div class="bar-inputs">
+        <input class="bar-cur" id="bar-vida-cur" type="number" value="22" min="0">
+        <span class="bar-sep">/</span>
+        <input class="bar-max" id="bar-vida-max" type="number" value="22" readonly>
+      </div>
+      <div class="bar-note">12 + (Fís.Corp × 10)</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label" style="color:var(--el)">◈ Afinidade</div>
+      <div class="bar-inputs">
+        <input class="bar-cur" id="bar-afi-cur" type="number" value="30" min="0" style="border-color:var(--el-b);color:var(--el)">
+        <span class="bar-sep">/</span>
+        <input class="bar-max" id="bar-afi-max" type="number" value="30" readonly>
+      </div>
+      <div class="bar-note">total disponível</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">⚡ Corrupção</div>
+      <div class="bar-inputs">
+        <input class="bar-cur" id="corr-number" type="number" value="0" min="0" oninput="document.getElementById('corr-main').value=this.value;syncDots(this.value)">
+      </div>
+      <div class="bar-note">+1 por uso de Marco</div>
+    </div>
+  </div>
+
+  <!-- CONDIÇÕES -->
+  <div class="sec-t">Condições Ativas</div>
+  <div class="status-grid" id="status-grid">
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Imobilizado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Atordoado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Amedrontado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Sangrando</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Envenenado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Lento</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Paralisado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Cego</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Confuso</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Esgotado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Marcado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Congelado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Exposto</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Aliciado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Enfraquecido</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Flanqueado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Desorientado</span></label>
+    <label class="st-chip"><input type="checkbox" onchange="toggleChip(this)"><span>Inflamado</span></label>
+  </div>
+
+  <!-- HABILIDADES -->
+  <div class="sec-t">Habilidades de Tempo</div>
+  <div class="info-strip">Categorias: <strong>Aceleração</strong> · <strong>Desaceleração & Pausa</strong> · <strong>Reversão</strong> · <strong>Visão Temporal</strong>. Filtre por tipo ou categoria.</div>
+  <!-- FILTROS POR TIPO DE AÇÃO -->
+  <div class="hab-filter" id="type-filter" style="margin-top:10px">
+    <button class="hfbtn on" data-filter="all" onclick="filterHabs(this,'all')">Todas</button>
+    <button class="hfbtn" data-filter="Ação Principal" onclick="filterHabs(this,'Ação Principal')">Ação Principal</button>
+    <button class="hfbtn" data-filter="Ação Bônus" onclick="filterHabs(this,'Ação Bônus')">Ação Bônus</button>
+    <button class="hfbtn" data-filter="Reação" onclick="filterHabs(this,'Reação')">Reação</button>
+    <button class="hfbtn" data-filter="Ação Completa" onclick="filterHabs(this,'Ação Completa')">Ação Completa</button>
+    <button class="hfbtn" data-filter="Passiva" onclick="filterHabs(this,'Passiva')">Passiva</button>
+  </div>
+  <!-- FILTROS POR CATEGORIA ELEMENTAL -->
+  <div class="hab-filter" id="cat-filter">
+    <button class="hfbtn on" data-filter="all" onclick="filterHabsCat(this,'all')">Todas as categorias</button>
+    <button class="hfbtn" data-filter="Aceleração" onclick="filterHabsCat(this,'Aceleração')">Aceleração</button>
+    <button class="hfbtn" data-filter="Desaceleração" onclick="filterHabsCat(this,'Desaceleração')">Desaceleração</button>
+    <button class="hfbtn" data-filter="Reversão" onclick="filterHabsCat(this,'Reversão')">Reversão</button>
+    <button class="hfbtn" data-filter="Visão" onclick="filterHabsCat(this,'Visão')">Visão Temporal</button>
+  </div>
+  <div id="habs-container">
+    <!-- habilidade inicial pré-preenchida -->
+    <div class="hab" data-action="Ação Principal" data-cat="Aceleração">
+      <div class="hab-top">
+        <div class="hab-nome"><input type="text" placeholder="Nome da habilidade…" oninput="onHabNomeChange(this)"></div>
+        <div class="hab-cost"><label>Custo Afi</label><input type="text" placeholder="0"></div>
+        <div class="hab-type"><label>Tipo de Ação</label>
+          <select onchange="onHabTypeChange(this)">
+            <option>Ação Principal</option><option>Ação Bônus</option><option>Reação</option><option>Ação Completa</option><option>Passiva</option>
+          </select>
+        </div>
+        <button class="hab-del-btn" onclick="delHab(this)" title="Deletar habilidade">✕</button>
+      </div>
+      <div class="hab-desc"><textarea placeholder="Descrição, alcance, efeito…" oninput="autoResize(this)"></textarea></div>
+      <div class="hab-tags">
+        <span class="htag on" onclick="toggleTag(this)">Aceleração</span>
+        <span class="htag" onclick="toggleTag(this)">Desaceleração</span>
+        <span class="htag" onclick="toggleTag(this)">Reversão</span>
+        <span class="htag" onclick="toggleTag(this)">Visão</span>
+      </div>
+    </div>
+  </div>
+  <button class="btn-add" onclick="addHab()">+ Adicionar Habilidade</button>
+
+  <!-- MARCOS DE PODER -->
+  <div class="sec-t">Marcos de Poder</div>
+  <div class="info-strip" style="margin-bottom:12px">Desbloqueados nos níveis <strong>5 · 10 · 15 · 20</strong>. Cada uso de Marco ativo adiciona +1 de Corrupção.</div>
+  <div id="marcos-container">
+    <div class="marco">
+      <div class="marco-lv">Nv 5</div>
+      <div class="marco-body">
+        <input type="text" value="Sentido do Fluxo" placeholder="Nome do Marco">
+        <textarea oninput="autoResize(this)">Passiva — Nunca surpreendido. Age primeiro em empate de Iniciativa. Rola Iniciativa 2×, usa o maior. Custo: −1 Alma Mental após cada combate (recupera com descanso longo).</textarea>
+      </div>
+      <div class="marco-check"><label>Ativo</label><input type="checkbox"></div>
+    </div>
+    <div class="marco">
+      <div class="marco-lv">Nv 10</div>
+      <div class="marco-body">
+        <input type="text" value="Pulso Temporal" placeholder="Nome do Marco">
+        <textarea oninput="autoResize(this)">Reação (8 Afi) — Ao ser acertado: desfaz o ataque, o atacante usa Ação Principal para outra coisa (não pode re-atacar o mesmo alvo). Limite: 1×/combate. Custo: 1d6 de dano direto (ignora Defesa).</textarea>
+      </div>
+      <div class="marco-check"><label>Ativo</label><input type="checkbox"></div>
+    </div>
+    <div class="marco">
+      <div class="marco-lv">Nv 15</div>
+      <div class="marco-body">
+        <input type="text" value="Congelamento em Área" placeholder="Nome do Marco">
+        <textarea oninput="autoResize(this)">Ação (15 Afi) — Congela o tempo em 8m de raio por 2 turnos. Inimigos não agem nem se movem. Aliados agem normalmente. Usuário move-se livremente pela área. Custo: −3 Cociente por 2h; percepção temporal fragmentada.</textarea>
+      </div>
+      <div class="marco-check"><label>Ativo</label><input type="checkbox"></div>
+    </div>
+    <div class="marco">
+      <div class="marco-lv">Nv 20</div>
+      <div class="marco-body">
+        <input type="text" value="Senhor do Tempo" placeholder="Nome do Marco">
+        <textarea oninput="autoResize(this)">Ação Completa (22 Afi) — Para o tempo em 20m por 2 turnos. Apenas o usuário age. Projéteis suspensos, chamas paradas, inimigos imóveis. Custo: −2 perm. Alma Mental (cumulativo). Existência em desfasamento perceptível.</textarea>
+      </div>
+      <div class="marco-check"><label>Ativo</label><input type="checkbox"></div>
+    </div>
+  </div>
+
+  <!-- CORRUPÇÃO -->
+  <div class="sec-t">Corrupção Elemental</div>
+  <div class="corr-track">
+    <div class="corr-top">
+      <div class="corr-val-wrap">
+        <input class="corr-val" id="corr-main" type="number" min="0" value="0" oninput="syncDots(this.value);document.getElementById('corr-number').value=this.value">
+        <div>
+          <div class="corr-label">Pontos de Corrupção</div>
+          <div style="font-family:var(--mono);font-size:.5rem;color:var(--tx3);margin-top:3px">+1 por uso de habilidade de Marco</div>
+        </div>
+      </div>
+    </div>
+    <div class="corr-dots" id="corr-dots"></div>
+    <div class="corr-status" id="corr-status">Nenhum efeito ativo.</div>
+  </div>
+
+  <!-- INVENTÁRIO -->
+  <div class="sec-t">Inventário</div>
+  <div class="info-strip" style="margin-bottom:12px">Máx. <strong>5 poções</strong> e <strong>10 itens</strong>. Poções: Ação Bônus para usar.</div>
+  <div style="background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px">
+    <div id="inv-list">
+      <div class="inv-item"><input type="text" placeholder="Item / poção…"><input class="inv-qty" type="number" min="0" value="1"><button class="inv-del" onclick="delInv(this)">✕</button></div>
+      <div class="inv-item"><input type="text" placeholder="Item / poção…"><input class="inv-qty" type="number" min="0" value="1"><button class="inv-del" onclick="delInv(this)">✕</button></div>
+      <div class="inv-item"><input type="text" placeholder="Item / poção…"><input class="inv-qty" type="number" min="0" value="1"><button class="inv-del" onclick="delInv(this)">✕</button></div>
+    </div>
+    <button class="btn-add" onclick="addInv()">+ Adicionar Item</button>
+  </div>
+
+  <!-- ARMAS & ARMADURA -->
+  <div class="sec-t">Armas & Armadura</div>
+  <div class="g2">
+    <div style="background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px">
+      <div style="font-family:var(--mono);font-size:.52rem;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase;margin-bottom:10px">Arma Principal</div>
+      <div class="field" style="margin-bottom:8px"><label>Nome</label><input type="text" id="arma-nome" placeholder="—"></div>
+      <div class="g2">
+        <div class="field"><label>Dano</label><input type="text" id="arma-dano" placeholder="1d6 + …"></div>
+        <div class="field"><label>Tipo</label><input type="text" id="arma-tipo" placeholder="Leve / Pesada"></div>
+      </div>
+      <div class="field" style="margin-top:8px"><label>Efeito Especial</label><textarea id="arma-ef" style="min-height:44px;overflow:hidden" placeholder="—" oninput="autoResize(this)"></textarea></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--br);border-radius:var(--r);padding:14px 16px">
+      <div style="font-family:var(--mono);font-size:.52rem;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase;margin-bottom:10px">Armadura</div>
+      <div class="field" style="margin-bottom:8px"><label>Nome</label><input type="text" id="arm-nome" placeholder="—"></div>
+      <div class="g2">
+        <div class="field"><label>+Defesa</label><input type="number" id="arm-def" placeholder="0"></div>
+        <div class="field"><label>Tipo</label><input type="text" id="arm-tipo" placeholder="Leve / Média / Pesada"></div>
+      </div>
+      <div class="field" style="margin-top:8px"><label>Efeito Especial</label><textarea id="arm-ef" style="min-height:44px;overflow:hidden" placeholder="—" oninput="autoResize(this)"></textarea></div>
+    </div>
+  </div>
+
+  <!-- RECURSOS -->
+  <div class="sec-t">Recursos</div>
+  <div class="g3">
+    <div class="field"><label>⬡ Moedas (₢)</label><input type="number" id="moedas" min="0" value="0"></div>
+    <div class="field"><label>Pontos de Poder (PP)</label><input type="number" id="pp2" min="0" value="0"></div>
+    <div class="field"><label>Afinidade Regen./Turno</label><input type="number" id="afi-regen" value="10" readonly style="opacity:.7"></div>
+  </div>
+
+  <!-- REAÇÕES ELEMENTAIS RELEVANTES -->
+  <div class="sec-t">Reações Elementais</div>
+  <div class="info-strip">
+    <strong>Tempo + Espaço → Relativisação:</strong> Alvo age por último, mas recebe metade do dano no turno seguinte.<br>
+    <strong>Tempo + Realidade → Memória Reescrita:</strong> Alvo perde buffs do turno e retorna à posição inicial da rodada.
+  </div>
+
+  <!-- NOTAS -->
+  <div class="sec-t">Notas & História</div>
+  <div class="field"><label>Background / Trajetória</label><textarea class="notes-area" id="notes-bg" placeholder="Quem era antes do elemento chegar…" oninput="autoResize(this)"></textarea></div>
+  <div class="field" style="margin-top:10px"><label>Notas de Sessão / Missões</label><textarea class="notes-area" id="notes-sess" placeholder="Objetivos, NPCs importantes, pistas…" oninput="autoResize(this)"></textarea></div>
+  <div class="field" style="margin-top:10px"><label>Custo Acumulado da Corrupção (narrativa)</label><textarea class="notes-area" id="notes-corr" style="min-height:70px" placeholder="Como o Tempo está tomando o corpo e a mente…" oninput="autoResize(this)"></textarea></div>
+
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar">
+  <div>
+    <div class="save-status" id="save-status">Carregando…</div>
+    <div style="font-family:var(--mono);font-size:.48rem;color:var(--tx3);margin-top:2px">Dados sincronizados automaticamente com a nuvem</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <label class="btn-save" style="cursor:pointer;color:var(--tx3);border-color:var(--br)" title="Importar ficha salva">
+      Importar ↑
+      <input type="file" accept=".json" style="display:none" onchange="importData(this)">
+    </label>
+    <button class="btn-save" onclick="clearData()" style="color:var(--tx3);border-color:var(--br)">Limpar</button>
+    <button class="btn-save" onclick="exportData()">Exportar ↓</button>
+  </div>
+</div>
+
+    <div style="font-family:var(--mono);font-size:.48rem;color:var(--tx3);margin-top:2px">Exporte para compartilhar · Importe para carregar</div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <label class="btn-save" style="cursor:pointer;color:var(--tx3);border-color:var(--br)" title="Importar ficha salva">
+      Importar ↑
+      <input type="file" accept=".json" style="display:none" onchange="importData(this)">
+    </label>
+    <button class="btn-save" onclick="clearData()" style="color:var(--tx3);border-color:var(--br)">Limpar</button>
+    <button class="btn-save" onclick="exportData()">Exportar & Salvar ↓</button>
+  </div>
+</div>
+
+<script>
+const SAVE_KEY = 'ficha_tempo_3caidos_v1';
+const EL_TAGS = ['Aceleração','Desaceleração','Reversão','Visão'];
+
+// ── DERIVED STATS ─────────────────────────────────────────────────────────────
+function tetoByNivel(n){ return n<=4?5:n<=9?10:n<=14?15:n<=19?20:25; }
+function afiBaseByNivel(n){ return n<=4?25:n<=9?45:n<=14?75:n<=19?115:175; }
+function afiTurnoByNivel(n){ return n<=4?10:n<=9?15:n<=14?20:n<=19?25:30; }
+
+function updateTeto(){
+  const n=parseInt(document.getElementById('nivel-input').value)||1;
+  const t=tetoByNivel(n);
+  document.getElementById('teto-display').textContent=t;
+  document.querySelectorAll('.teto-val').forEach(el=>el.textContent=t);
+  document.getElementById('afi-turno-display').value=afiTurnoByNivel(n);
+  document.getElementById('afi-regen').value=afiTurnoByNivel(n);
+}
+
+function updateDerived(){
+  const fdb=parseInt(document.getElementById('atr-fdb').value)||0;
+  const fco=parseInt(document.getElementById('atr-fco').value)||0;
+  const alm=parseInt(document.getElementById('atr-alm').value)||0;
+  const intel=parseInt(document.getElementById('atr-int').value)||0;
+  const n=parseInt(document.getElementById('nivel-input').value)||1;
+  const def=13+fdb;
+  const res=14+alm;
+  const vida=12+(fco*10);
+  const afiMax=afiBaseByNivel(n)+(intel*5);
+  document.getElementById('der-def').value=def;
+  document.getElementById('der-res').value=res;
+  document.getElementById('der-vida').value=vida;
+  document.getElementById('der-afi-max').value=afiMax;
+  document.getElementById('bar-vida-max').value=vida;
+  document.getElementById('bar-afi-max').value=afiMax;
+  updateTeto();
+}
+
+// ── AUTO-RESIZE TEXTAREA ──────────────────────────────────────────────────────
+function autoResize(ta){ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
+function autoResizeAll(){ document.querySelectorAll('textarea').forEach(ta=>{ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }); }
+function onHabNomeChange(input){}
+
+function onHabTypeChange(sel){
+  const hab=sel.closest('.hab');
+  hab.dataset.action=sel.value;
+  applyCurrentFilter();
+}
+
+function delHab(btn){
+  if(confirm('Deletar esta habilidade?')) btn.closest('.hab').remove();
+}
+
+function toggleTag(span){
+  span.classList.toggle('on');
+  const hab=span.closest('.hab');
+  const activeCats=[...hab.querySelectorAll('.htag.on')].map(t=>t.textContent);
+  hab.dataset.cat=activeCats[0]||'';
+  applyCurrentFilter();
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+let activeTypeFilter='all';
+let activeCatFilter='all';
+
+function applyCurrentFilter(){
+  document.querySelectorAll('#habs-container .hab').forEach(hab=>{
+    const matchType=activeTypeFilter==='all'||hab.dataset.action===activeTypeFilter;
+    const matchCat=activeCatFilter==='all'||
+      [...hab.querySelectorAll('.htag.on')].some(t=>t.textContent===activeCatFilter);
+    hab.style.display=(matchType&&matchCat)?'':'none';
+  });
+}
+
+function filterHabs(btn,val){
+  document.querySelectorAll('#type-filter .hfbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  activeTypeFilter=val;
+  applyCurrentFilter();
+}
+
+function filterHabsCat(btn,val){
+  document.querySelectorAll('#cat-filter .hfbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  activeCatFilter=val;
+  applyCurrentFilter();
+}
+
+// ── ADD HAB ───────────────────────────────────────────────────────────────────
+function addHab(){
+  const c=document.getElementById('habs-container');
+  const d=document.createElement('div');
+  d.className='hab'; d.dataset.action='Ação Principal'; d.dataset.cat='';
+  d.innerHTML=`
+    <div class="hab-top">
+      <div class="hab-nome"><input type="text" placeholder="Nome da habilidade…" oninput="onHabNomeChange(this)"></div>
+      <div class="hab-cost"><label>Custo Afi</label><input type="text" placeholder="0"></div>
+      <div class="hab-type"><label>Tipo de Ação</label>
+        <select onchange="onHabTypeChange(this)">
+          <option>Ação Principal</option><option>Ação Bônus</option><option>Reação</option><option>Ação Completa</option><option>Passiva</option>
+        </select>
+      </div>
+      <button class="hab-del-btn" onclick="delHab(this)" title="Deletar">✕</button>
+    </div>
+    <div class="hab-desc"><textarea placeholder="Descrição, alcance, efeito…" oninput="autoResize(this)" style="overflow:hidden"></textarea></div>
+    <div class="hab-tags">
+      ${EL_TAGS.map(t=>`<span class="htag" onclick="toggleTag(this)">${t}</span>`).join('')}
+    </div>`;
+  c.appendChild(d);
+  d.querySelector('input[type=text]').focus();
+}
+
+// ── INVENTÁRIO ────────────────────────────────────────────────────────────────
+function addInv(){
+  const l=document.getElementById('inv-list');
+  const d=document.createElement('div'); d.className='inv-item';
+  d.innerHTML=`<input type="text" placeholder="Item / poção…"><input class="inv-qty" type="number" min="0" value="1"><button class="inv-del" onclick="delInv(this)">✕</button>`;
+  l.appendChild(d);
+}
+function delInv(btn){ btn.closest('.inv-item').remove(); }
+
+// ── STATUS CHIPS ──────────────────────────────────────────────────────────────
+function toggleChip(cb){ cb.closest('.st-chip').classList.toggle('on',cb.checked); }
+
+// ── CORRUPÇÃO DOTS ────────────────────────────────────────────────────────────
+const CORR_STATUS=[
+  {max:10,  txt:'<strong>1–10:</strong> Olhos brilham em verde jade em momentos de emoção intensa. Nenhum efeito mecânico.'},
+  {max:20,  txt:'<strong>11–20:</strong> +1 Afinidade/turno (passivo). Movimentos levemente dessincronizados. Animais se afastam.'},
+  {max:30,  txt:'<strong>21–30:</strong> +2 Afi/turno; −1 em testes sociais. Presença faz relógios e máquinas perderem sincronia.'},
+  {max:40,  txt:'<strong>31–40:</strong> +3 Afi/turno; −2 em testes sociais. Episódios involuntários de desaceleração local sob stress.'},
+  {max:50,  txt:'<strong>41–50:</strong> +5 Afi/turno; Marco aleatório 1×/dia. Mestre pode ativar Marcos sem aviso.'},
+  {max:Infinity, txt:'<strong>50+:</strong> <em>O Tempo começa a escolher por você.</em>'}
+];
+
+function buildDots(){
+  const d=document.getElementById('corr-dots'); d.innerHTML='';
+  for(let i=0;i<50;i++){
+    const dot=document.createElement('div'); dot.className='cdot'; dot.dataset.i=i;
+    dot.onclick=()=>{ document.getElementById('corr-main').value=i+1; syncDots(i+1); document.getElementById('corr-number').value=i+1; };
+    d.appendChild(dot);
+  }
+}
+function syncDots(val){
+  val=parseInt(val)||0;
+  document.querySelectorAll('.cdot').forEach((d,i)=>d.classList.toggle('on',i<val));
+  const s=CORR_STATUS.find(s=>val<=s.max);
+  document.getElementById('corr-status').innerHTML=s?s.txt:'Nenhum efeito ativo.';
+}
+buildDots();
+
+const FB_PATH = 'fichas/tempo';
+
+// ── FIREBASE CONFIG ─// ── FIREBASE CONFIG ─// ── FIREBASE CONFIG ─
+const _fbCfg = {
+  apiKey:"AIzaSyAmJzO3aFceEVu0vX2tTxOjmDWt3MAUNzY",
+  authDomain:"c-painel-ebc14.firebaseapp.com",
+  databaseURL:"https://c-painel-ebc14-default-rtdb.firebaseio.com",
+  projectId:"c-painel-ebc14",
+  storageBucket:"c-painel-ebc14.firebasestorage.app",
+  messagingSenderId:"839388082639",
+  appId:"1:839388082639:web:2c1915fa7f7184b89722ba"
+};
+if(!firebase.apps.length) firebase.initializeApp(_fbCfg);
+const _db = firebase.database();
+
+let _saveTimer = null;
+let _fbConnected = false;
+
+firebase.database().ref('.info/connected').on('value', snap => {
+  _fbConnected = !!snap.val();
+  updateStatusBar();
+});
+
+function updateStatusBar(){
+  const s = document.getElementById('save-status');
+  if(_fbConnected){
+    s.textContent = 'Conectado ✓';
+    s.className = 'save-status saved';
+  } else {
+    s.textContent = 'Sem conexão — dados locais';
+    s.className = 'save-status';
+  }
+}
+
+// ── SAVE / LOAD ─// ── SAVE / LOAD ─// ── SAVE / LOAD ─
+function collectData(){
+  const fixed={};
+  document.querySelectorAll('[id]').forEach(el=>{
+    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.tagName==='SELECT'){
+      fixed[el.id]=el.type==='checkbox'?el.checked:el.value;
+    }
+  });
+  const chips=[];
+  document.querySelectorAll('.st-chip input[type=checkbox]').forEach((cb,i)=>{
+    chips.push({i,checked:cb.checked});
+  });
+  const habs=[];
+  document.querySelectorAll('#habs-container .hab').forEach(hab=>{
+    const nome=hab.querySelector('.hab-nome input')?.value||'';
+    const custo=hab.querySelector('.hab-cost input')?.value||'';
+    const tipo=hab.querySelector('.hab-type select')?.value||'Ação Principal';
+    const desc=hab.querySelector('.hab-desc textarea')?.value||'';
+    const tags=[...hab.querySelectorAll('.htag.on')].map(t=>t.textContent);
+    habs.push({nome,custo,tipo,desc,tags});
+  });
+  const inv=[];
+  document.querySelectorAll('#inv-list .inv-item').forEach(item=>{
+    const nome=item.querySelector('input[type=text]')?.value||'';
+    const qty=item.querySelector('.inv-qty')?.value||'1';
+    inv.push({nome,qty});
+  });
+  return {fixed,chips,habs,inv};
+}
+
+function scheduleSave(){
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(()=>saveData(), 1500);
+}
+
+function saveData(){
+  const data = collectData();
+  const json = JSON.stringify(data);
+  localStorage.setItem(SAVE_KEY, json);
+  if(_fbConnected){
+    _db.ref(FB_PATH).set(data)
+      .then(()=>{
+        const s=document.getElementById('save-status');
+        s.textContent='Salvo na nuvem ✓'; s.className='save-status saved';
+      })
+      .catch(err=>{
+        const s=document.getElementById('save-status');
+        s.textContent='Erro ao salvar!'; s.className='save-status';
+      });
+  }
+}
+
+function applyData(data){
+  if(!data)return;
+  if(data.fixed){
+    Object.entries(data.fixed).forEach(([id,val])=>{
+      const el=document.getElementById(id);
+      if(!el)return;
+      if(el.type==='checkbox')el.checked=val;
+      else el.value=val;
+    });
+  }
+  if(data.chips){
+    const cbs=document.querySelectorAll('.st-chip input[type=checkbox]');
+    data.chips.forEach(({i,checked})=>{
+      if(cbs[i]){cbs[i].checked=checked;cbs[i].closest('.st-chip').classList.toggle('on',checked);}
+    });
+  }
+  if(data.habs){
+    document.getElementById('habs-container').innerHTML='';
+    data.habs.forEach(h=>{
+      const d=document.createElement('div');
+      d.className='hab'; d.dataset.action=h.tipo; d.dataset.cat=h.tags[0]||'';
+      d.innerHTML=`
+        <div class="hab-top">
+          <div class="hab-nome"><input type="text" value="${escH(h.nome)}" placeholder="Nome da habilidade\u2026" oninput="onHabNomeChange(this)"></div>
+          <div class="hab-cost"><label>Custo Afi</label><input type="text" value="${escH(h.custo)}" placeholder="0"></div>
+          <div class="hab-type"><label>Tipo de A\u00e7\u00e3o</label>
+            <select onchange="onHabTypeChange(this)">
+              ${['A\u00e7\u00e3o Principal','A\u00e7\u00e3o B\u00f4nus','Rea\u00e7\u00e3o','A\u00e7\u00e3o Completa','Passiva'].map(o=>`<option${o===h.tipo?' selected':''}>${o}</option>`).join('')}
+            </select>
+          </div>
+          <button class="hab-del-btn" onclick="delHab(this)" title="Deletar">\u2715</button>
+        </div>
+        <div class="hab-desc"><textarea placeholder="Descri\u00e7\u00e3o, alcance, efeito\u2026" oninput="autoResize(this)" style="overflow:hidden">${escH(h.desc)}</textarea></div>
+        <div class="hab-tags">
+          ${EL_TAGS.map(t=>`<span class="htag${h.tags.includes(t)?' on':''}" onclick="toggleTag(this)">${t}</span>`).join('')}
+        </div>`;
+      document.getElementById('habs-container').appendChild(d);
+    });
+  }
+  if(data.inv){
+    document.getElementById('inv-list').innerHTML='';
+    data.inv.forEach(it=>{
+      const d=document.createElement('div'); d.className='inv-item';
+      d.innerHTML=`<input type="text" value="${escH(it.nome)}" placeholder="Item / po\u00e7\u00e3o\u2026"><input class="inv-qty" type="number" min="0" value="${it.qty}"><button class="inv-del" onclick="delInv(this)">\u2715</button>`;
+      document.getElementById('inv-list').appendChild(d);
+    });
+  }
+  updateDerived();
+  syncDots(parseInt(document.getElementById('corr-main').value)||0);
+  setTimeout(autoResizeAll,50);
+}
+
+function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function exportData(){
+  const data=collectData();
+  const json=JSON.stringify(data,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const nome=document.getElementById('id-nome')?.value||'personagem';
+  a.href=url; a.download=`ficha_${nome.replace(/[^a-z0-9]/gi,'_')}.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function importData(input){
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      applyData(data);
+      saveData();
+      const s=document.getElementById('save-status');
+      s.textContent='Importado e salvo ✓'; s.className='save-status saved';
+      setTimeout(()=>updateStatusBar(),2500);
+    }catch(err){ alert('Erro ao importar: arquivo inválido.'); }
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+
+function clearData(){
+  if(confirm('Limpar toda a ficha? Isso apagará os dados da nuvem também.')){
+    localStorage.removeItem(SAVE_KEY);
+    _db.ref(FB_PATH).remove();
+    location.reload();
+  }
+}
+
+function loadData(){
+  const s=document.getElementById('save-status');
+  s.textContent='Carregando…'; s.className='save-status';
+  _db.ref(FB_PATH).once('value')
+    .then(snap=>{
+      const data=snap.val();
+      if(data){
+        applyData(data);
+        s.textContent='Carregado da nuvem ✓'; s.className='save-status saved';
+        setTimeout(()=>updateStatusBar(),2000);
+      } else {
+        const raw=localStorage.getItem(SAVE_KEY);
+        if(raw){ try{ applyData(JSON.parse(raw)); }catch(e){} }
+        s.textContent='Sem dados na nuvem'; s.className='save-status';
+      }
+    })
+    .catch(()=>{
+      const raw=localStorage.getItem(SAVE_KEY);
+      if(raw){ try{ applyData(JSON.parse(raw)); }catch(e){} }
+      s.textContent='Offline — dados locais'; s.className='save-status';
+    });
+}
+</script>
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+document.addEventListener('input', e => {
+  if(e.target.matches('input,textarea,select')) scheduleSave();
+});
+document.addEventListener('change', e => {
+  if(e.target.type === 'checkbox') scheduleSave();
+});
+</script>
+</body>
+</html>
