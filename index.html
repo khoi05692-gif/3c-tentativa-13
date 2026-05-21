@@ -1309,7 +1309,7 @@ function importFicha(tipo, input) {
   r.readAsText(file);
 }
 
-function applyFichaToState(tipo, data) {
+function applyFichaToState(tipo, data, silent=false) {
   const f = data.fixed || {};
   const p = state.portadores[tipo];
   p.nome    = f['id-nome']     || tipo;
@@ -1329,7 +1329,7 @@ function applyFichaToState(tipo, data) {
   }
   const ie = state.initiative.find(e => e.id === tipo);
   if(ie) ie.nome = p.nome;
-  addLog(`${EL[tipo].icon} ${p.nome} entrou na arena.`, 'marco');
+  if(!silent) addLog(`${EL[tipo].icon} ${p.nome} entrou na arena.`, 'marco');
   renderAll(); save();
 }
 
@@ -2483,6 +2483,16 @@ function initArena() {
   });
 
   // ── 3. Escuta eventos visuais ──
+  // ── 4. Escuta fichas dos portadores em tempo real ──
+  const _fichaMap = { espaco:'espaco', tempo:'tempo', realidade:'realidade' };
+  Object.entries(_fichaMap).forEach(([fbKey, tipo]) => {
+    _db.ref('fichas/' + fbKey).on('value', snap => {
+      const data = snap.val();
+      if(!data) return;
+      applyFichaToState(tipo, data, true);
+    });
+  });
+
   _db.ref('arena/events').on('value', snap => {
     const data = snap.val(); if(!data) return;
     const now = Date.now();
