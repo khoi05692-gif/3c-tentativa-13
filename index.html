@@ -825,6 +825,70 @@ body[class*="clima-"] #clima-active-badge{display:flex}
   </div>
 </div>
 
+<!-- ══ MODAL FICHAS ══ -->
+<div class="modal-overlay" id="modal-fichas" onclick="if(event.target===this)closeFichas()">
+  <div class="modal" style="width:480px;max-width:95vw;padding:0;overflow:hidden;border:1px solid rgba(232,196,74,.2)">
+    <!-- topo -->
+    <div style="padding:18px 22px 14px;background:linear-gradient(180deg,rgba(232,196,74,.06),transparent);border-bottom:1px solid rgba(255,255,255,.06);position:relative">
+      <button class="modal-close" onclick="closeFichas()">✕</button>
+      <div style="font-family:var(--display);font-size:.68rem;letter-spacing:.14em;color:var(--gold);text-transform:uppercase">⬡ Fichas dos Portadores</div>
+      <div style="font-family:var(--mono);font-size:.42rem;letter-spacing:.2em;color:var(--tx3);margin-top:3px;text-transform:uppercase">Os 3 Caídos · Clique para abrir</div>
+    </div>
+    <!-- cards das fichas -->
+    <div style="display:flex;flex-direction:column;gap:0">
+
+      <!-- Realidade -->
+      <a href="realidade.html" target="_blank" style="text-decoration:none;display:block" class="ficha-card real-card">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.05);transition:background .2s;position:relative;overflow:hidden" onmouseover="this.style.background='rgba(240,92,92,.06)'" onmouseout="this.style.background='transparent'">
+          <div style="width:34px;height:34px;border-radius:4px;transform:rotate(45deg);background:radial-gradient(135deg,#ffd0d0,#f05c5c,#7a0a0a);box-shadow:0 0 18px rgba(240,92,92,.4);flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-family:var(--mono);font-size:.4rem;letter-spacing:.28em;color:#f05c5c;text-transform:uppercase;margin-bottom:3px">Portador da</div>
+            <div style="font-family:var(--display);font-size:.95rem;font-weight:900;color:#fff;line-height:1">Realidade</div>
+            <div style="font-family:var(--mono);font-size:.42rem;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.1em">Dano · Transformação · Caos</div>
+          </div>
+          <div style="font-family:var(--mono);font-size:.5rem;color:rgba(240,92,92,.7);letter-spacing:.1em">Abrir →</div>
+        </div>
+      </a>
+
+      <!-- Espaço -->
+      <a href="espaco.html" target="_blank" style="text-decoration:none;display:block" class="ficha-card esp-card">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.05);transition:background .2s;position:relative;overflow:hidden" onmouseover="this.style.background='rgba(126,200,227,.06)'" onmouseout="this.style.background='transparent'">
+          <div style="width:34px;height:34px;border-radius:4px;transform:rotate(45deg);background:radial-gradient(135deg,#c8ecff,#7ec8e3,#0a3a5a);box-shadow:0 0 18px rgba(126,200,227,.4);flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-family:var(--mono);font-size:.4rem;letter-spacing:.28em;color:#7ec8e3;text-transform:uppercase;margin-bottom:3px">Portador do</div>
+            <div style="font-family:var(--display);font-size:.95rem;font-weight:900;color:#fff;line-height:1">Espaço</div>
+            <div style="font-family:var(--mono);font-size:.42rem;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.1em">Mobilidade · Controle · Proteção</div>
+          </div>
+          <div style="font-family:var(--mono);font-size:.5rem;color:rgba(126,200,227,.7);letter-spacing:.1em">Abrir →</div>
+        </div>
+      </a>
+
+      <!-- Tempo -->
+      <a href="tempo.html" target="_blank" style="text-decoration:none;display:block" class="ficha-card tempo-card">
+        <div style="display:flex;align-items:center;gap:14px;padding:16px 22px;transition:background .2s;position:relative;overflow:hidden" onmouseover="this.style.background='rgba(109,232,168,.06)'" onmouseout="this.style.background='transparent'">
+          <div style="width:34px;height:34px;border-radius:4px;transform:rotate(45deg);background:radial-gradient(135deg,#b8ffd8,#6de8a8,#0a5a3a);box-shadow:0 0 18px rgba(109,232,168,.4);flex-shrink:0"></div>
+          <div style="flex:1">
+            <div style="font-family:var(--mono);font-size:.4rem;letter-spacing:.28em;color:#6de8a8;text-transform:uppercase;margin-bottom:3px">Portador do</div>
+            <div style="font-family:var(--display);font-size:.95rem;font-weight:900;color:#fff;line-height:1">Tempo</div>
+            <div style="font-family:var(--mono);font-size:.42rem;color:rgba(255,255,255,.3);margin-top:3px;letter-spacing:.1em">Suporte · Disrupção · Paradoxo</div>
+          </div>
+          <div style="font-family:var(--mono);font-size:.5rem;color:rgba(109,232,168,.7);letter-spacing:.1em">Abrir →</div>
+        </div>
+      </a>
+
+    </div>
+    <!-- rodapé -->
+    <div style="padding:10px 22px;border-top:1px solid rgba(255,255,255,.05);background:rgba(4,4,10,.5)">
+      <div style="font-family:var(--mono);font-size:.42rem;color:var(--tx3);letter-spacing:.1em">As fichas abrem em nova aba · Dados sincronizados com Firebase</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openFichas(){ document.getElementById('modal-fichas').classList.add('active'); }
+function closeFichas(){ document.getElementById('modal-fichas').classList.remove('active'); }
+</script>
+
 <!-- ══ APP ══ -->
 <div id="app">
   <div id="topbar">
@@ -838,6 +902,7 @@ body[class*="clima-"] #clima-active-badge{display:flex}
     <div id="fb-dot" style="width:8px;height:8px;border-radius:50%;background:var(--real);box-shadow:0 0 6px var(--real);flex-shrink:0;transition:all .5s" title="Status Firebase"></div>
     <div id="player-identity-badge" style="display:none;font-family:var(--mono);font-size:.44rem;letter-spacing:.1em;padding:4px 10px;border-radius:4px;background:var(--gold-d);border:1px solid var(--gold-b);color:var(--gold)"></div>
     <button class="top-btn gold" onclick="openModal('modal-login')" id="btn-login">⚔ Identificar</button>
+    <button class="top-btn" onclick="openFichas()" style="border-color:rgba(232,196,74,.3);color:var(--gold)">⬡ Fichas</button>
     <button class="top-btn reacao" onclick="openModal('modal-reacao')">⚗ Reação</button>
     <button class="top-btn" onclick="toggleMode()" id="mode-btn">Modo: Mestre 👑</button>
     <button class="top-btn" onclick="openModal('modal-import')">↑ Fichas</button>
