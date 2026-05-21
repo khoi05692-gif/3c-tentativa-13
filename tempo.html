@@ -145,6 +145,9 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .btn-save:hover{background:rgba(109,232,168,.15);box-shadow:0 0 12px rgba(109,232,168,.2)}
 @media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}.hdr{flex-direction:column;text-align:center}.hdr-right{margin-left:0;text-align:center}.hab-top{grid-template-columns:1fr 1fr}}
 </style>
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 </head>
 <body>
 <div class="amb a1"></div><div class="amb a2"></div>
@@ -838,9 +841,6 @@ function loadData(){
     });
 }
 </script>
-<!-- Firebase Compat SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
 document.addEventListener('input', e => {
   if(e.target.matches('input,textarea,select')) scheduleSave();
