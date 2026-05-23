@@ -45,10 +45,18 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .top-btn.gold:hover{background:rgba(232,196,74,.15)}
 
 /* MAIN */
-#main{display:grid;grid-template-columns:1fr 330px;overflow:hidden;position:relative}
+#main{display:grid;grid-template-columns:1fr 360px;overflow:hidden;position:relative}
 
-/* ARENA */
-#arena{display:flex;flex-direction:column;gap:10px;padding:14px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--br3) transparent}
+/* ARENA com abas */
+#arena{display:flex;flex-direction:column;overflow:hidden}
+#arena-tabs{display:flex;border-bottom:1px solid var(--br2);background:rgba(4,4,10,.85);flex-shrink:0;position:sticky;top:0;z-index:10}
+.arena-tab{flex:1;padding:10px 4px;font-family:var(--mono);font-size:.42rem;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
+.arena-tab:hover{color:var(--tx);background:rgba(255,255,255,.02)}
+.arena-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(232,196,74,.03)}
+.tab-badge{font-size:.55rem;opacity:.6;font-family:var(--display)}
+#arena-content{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--br3) transparent}
+.arena-panel{display:none;padding:14px;gap:14px;flex-direction:column}
+.arena-panel.active{display:flex}
 
 /* PORTADORES */
 .portadores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -123,6 +131,81 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .log-msg.heal{color:var(--tempo)}
 .log-msg.marco{color:var(--gold)}
 .log-msg.hidden-msg{filter:blur(4px);cursor:pointer}
+
+/* NPC GRID */
+.npc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.npc-empty{font-family:var(--mono);font-size:.46rem;color:var(--tx3);text-align:center;padding:24px;border:1px dashed var(--br2);border-radius:8px;grid-column:1/-1;letter-spacing:.1em;text-transform:uppercase}
+.npc-card{background:var(--card);border:1px solid var(--br2);border-radius:8px;overflow:hidden;transition:border-color .2s}
+.npc-card:hover{border-color:var(--br3)}
+.npc-topline{height:2px;background:linear-gradient(90deg,transparent,rgba(240,92,92,.6),transparent)}
+.npc-head{padding:10px 12px 6px;display:flex;align-items:center;gap:8px}
+.npc-info{flex:1;min-width:0}
+.npc-nome{font-family:var(--display);font-size:.7rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.npc-tipo{font-family:var(--mono);font-size:.38rem;color:var(--tx3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+
+/* ── BADGES DE TIPO DE NPC ── */
+.npc-tipo-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:var(--mono);font-size:.38rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:2px 7px;border-radius:3px;border:1px solid;font-weight:700;
+  white-space:nowrap;
+}
+.npc-tipo-badge.tipo-inimigo{
+  background:rgba(180,40,40,.12);border-color:rgba(220,60,60,.35);color:#e07070;
+}
+.npc-tipo-badge.tipo-elite{
+  background:rgba(220,160,0,.1);border-color:rgba(232,196,74,.4);color:var(--gold);
+  box-shadow:0 0 8px -3px rgba(232,196,74,.3);
+}
+.npc-tipo-badge.tipo-chefe{
+  background:rgba(160,0,200,.14);border-color:rgba(200,60,255,.45);color:#d070ff;
+  box-shadow:0 0 10px -3px rgba(180,40,255,.35);letter-spacing:.18em;
+}
+.npc-tipo-badge.tipo-minion{
+  background:rgba(80,80,100,.12);border-color:rgba(120,120,160,.3);color:var(--tx2);
+}
+.npc-tipo-badge.tipo-neutro{
+  background:rgba(80,160,220,.1);border-color:rgba(100,180,240,.3);color:#80c8f0;
+}
+.npc-tipo-badge.tipo-aliado{
+  background:rgba(60,200,120,.1);border-color:rgba(80,230,140,.35);color:var(--tempo);
+  box-shadow:0 0 8px -3px rgba(80,220,140,.2);
+}
+/* Topline colorida por tipo */
+.npc-topline-full.tipo-inimigo{background:linear-gradient(90deg,transparent,rgba(220,60,60,.7),transparent)}
+.npc-topline-full.tipo-elite{background:linear-gradient(90deg,transparent,rgba(232,196,74,.75),transparent);box-shadow:0 0 8px -1px rgba(232,196,74,.4)}
+.npc-topline-full.tipo-chefe{background:linear-gradient(90deg,transparent,rgba(180,40,255,.85),rgba(220,60,60,.5),rgba(180,40,255,.85),transparent);box-shadow:0 0 12px -2px rgba(180,40,255,.5)}
+.npc-topline-full.tipo-minion{background:linear-gradient(90deg,transparent,rgba(120,120,160,.4),transparent)}
+.npc-topline-full.tipo-neutro{background:linear-gradient(90deg,transparent,rgba(100,180,240,.5),transparent)}
+.npc-topline-full.tipo-aliado{background:linear-gradient(90deg,transparent,rgba(80,230,140,.6),transparent)}
+/* Borda do card por tipo */
+.npc-card-full.tipo-chefe{border-color:rgba(180,40,255,.3)!important}
+.npc-card-full.tipo-chefe:hover{border-color:rgba(200,60,255,.55)!important;box-shadow:0 0 18px -5px rgba(180,40,255,.4)}
+.npc-card-full.tipo-elite{border-color:rgba(232,196,74,.22)!important}
+.npc-card-full.tipo-elite:hover{border-color:rgba(232,196,74,.45)!important;box-shadow:0 0 14px -5px rgba(232,196,74,.3)}
+.npc-card-full.tipo-aliado{border-color:rgba(80,230,140,.18)!important}
+.npc-card-full.tipo-aliado:hover{border-color:rgba(80,230,140,.38)!important}
+/* Gema do NPC por tipo */
+.npc-gem.tipo-inimigo{background:radial-gradient(135deg,#ff8080,#c03030,#600000);box-shadow:0 0 14px rgba(200,40,40,.4)}
+.npc-gem.tipo-elite{background:radial-gradient(135deg,#ffe090,var(--gold),#7a5a00);box-shadow:0 0 14px rgba(232,196,74,.45)}
+.npc-gem.tipo-chefe{background:radial-gradient(135deg,#e090ff,#a020d0,#400060);box-shadow:0 0 18px rgba(160,30,220,.6)}
+.npc-gem.tipo-minion{background:radial-gradient(135deg,#a0a0c0,#606080,#202030);box-shadow:0 0 10px rgba(100,100,140,.3)}
+.npc-gem.tipo-neutro{background:radial-gradient(135deg,#90c8f8,#4090c0,#002050);box-shadow:0 0 12px rgba(80,160,220,.35)}
+.npc-gem.tipo-aliado{background:radial-gradient(135deg,#90ffc0,var(--tempo),#005030);box-shadow:0 0 14px rgba(80,220,140,.4)}
+.npc-bars{padding:0 12px 8px}
+.npc-bar-meta{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.38rem;color:var(--tx3);margin-bottom:2px}
+.npc-bar-track{height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-bottom:6px}
+.npc-bar-fill{height:100%;background:linear-gradient(90deg,#c0392b,#e74c3c);border-radius:2px;transition:width .4s}
+.npc-btns{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:0 12px 10px}
+.npc-btn{background:var(--bg3);border:1px solid var(--br);border-radius:3px;color:var(--tx3);font-family:var(--mono);font-size:.38rem;letter-spacing:.06em;padding:4px;cursor:pointer;text-transform:uppercase;transition:all .15s;text-align:center}
+.npc-btn:hover{border-color:var(--br2);color:var(--tx)}
+.npc-btn.dmg:hover{border-color:var(--real-b);color:var(--real)}
+.npc-btn.del:hover{border-color:rgba(240,92,92,.3);color:var(--real)}
+.section-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px}
+.section-title{font-family:var(--display);font-size:.58rem;letter-spacing:.12em;color:var(--tx2);text-transform:uppercase}
+.section-hdr-btns{display:flex;gap:5px}
+.sh-btn{background:var(--bg3);border:1px solid var(--br2);border-radius:4px;color:var(--tx2);font-family:var(--mono);font-size:.44rem;letter-spacing:.08em;padding:4px 10px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.sh-btn:hover{border-color:var(--gold-b);color:var(--gold)}
 
 /* SIDE — agora totalmente rolável */
 #side{border-left:1px solid var(--br);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:rgba(4,4,10,.6);backdrop-filter:blur(10px);scrollbar-width:thin;scrollbar-color:var(--br3) transparent}
@@ -267,8 +350,17 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .roller-btn.active.real{border-color:var(--real-b);color:var(--real);background:var(--real-d)}
 .roller-btn.active.mestre{border-color:var(--gold-b);color:var(--gold);background:var(--gold-d)}
 
-/* ── ROLL HISTORY ── */
-.roll-history-panel{border-top:1px solid var(--br);padding:8px 14px;max-height:120px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--br3) transparent}
+/* ── ROLL HISTORY POR PERSONAGEM ── */
+.roll-history-panel{border-top:1px solid var(--br);padding:10px 14px 6px}
+.roll-hist-tabs{display:flex;gap:3px;margin-bottom:8px}
+.rht-btn{flex:1;background:var(--bg3);border:1px solid var(--br);border-radius:4px;color:var(--tx3);font-family:var(--mono);font-size:.36rem;letter-spacing:.06em;padding:3px 2px;cursor:pointer;text-transform:uppercase;transition:all .15s;text-align:center}
+.rht-btn:hover{border-color:var(--br2);color:var(--tx)}
+.rht-btn.active.mestre{border-color:var(--gold-b);color:var(--gold);background:var(--gold-d)}
+.rht-btn.active.espaco{border-color:var(--esp-b);color:var(--esp);background:var(--esp-d)}
+.rht-btn.active.tempo{border-color:var(--tempo-b);color:var(--tempo);background:var(--tempo-d)}
+.rht-btn.active.realidade{border-color:var(--real-b);color:var(--real);background:var(--real-d)}
+.rht-btn.active.todos{border-color:var(--br2);color:var(--tx);background:rgba(255,255,255,.04)}
+.roll-hist-list{max-height:130px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--br3) transparent;display:flex;flex-direction:column;gap:1px}
 .roll-hist-title{font-family:var(--mono);font-size:.38rem;letter-spacing:.16em;color:var(--tx3);text-transform:uppercase;margin-bottom:6px}
 .roll-hist-entry{font-family:var(--mono);font-size:.42rem;display:flex;align-items:baseline;gap:5px;padding:2px 0;border-bottom:1px solid rgba(255,255,255,.02);line-height:1.5}
 .roll-hist-who{flex-shrink:0;font-size:.38rem}
@@ -404,6 +496,13 @@ body.clima-abismo{
   --clima-card-border:rgba(80,40,160,.2);--clima-card-glow:rgba(40,0,100,.14);
   --clima-top:rgba(10,0,30,.3);--clima-particle:#6040a0;
 }
+body.clima-oceano{--clima-tint:rgba(0,30,80,.22);--clima-c1:#20d0ff;--clima-c2:#0060a0;--clima-fog:rgba(0,60,120,.14);--clima-card-border:rgba(20,180,255,.18);--clima-card-glow:rgba(0,100,200,.1);--clima-top:rgba(0,50,120,.16);--clima-particle:#40d8ff}
+body.clima-nevoa{--clima-tint:rgba(180,200,255,.08);--clima-c1:#c0d8ff;--clima-c2:#8090c0;--clima-fog:rgba(160,180,255,.12);--clima-card-border:rgba(180,200,255,.2);--clima-card-glow:rgba(140,160,255,.08);--clima-top:rgba(160,180,255,.1);--clima-particle:#d0e0ff}
+body.clima-deserto{--clima-tint:rgba(180,100,0,.16);--clima-c1:#ffb040;--clima-c2:#c06000;--clima-fog:rgba(200,120,0,.1);--clima-card-border:rgba(255,160,40,.18);--clima-card-glow:rgba(200,100,0,.09);--clima-top:rgba(180,90,0,.14);--clima-particle:#ffc060}
+body.clima-tempestade{--clima-tint:rgba(20,20,80,.28);--clima-c1:#a0b8ff;--clima-c2:#3040c0;--clima-fog:rgba(40,50,160,.16);--clima-card-border:rgba(120,140,255,.22);--clima-card-glow:rgba(60,80,220,.12);--clima-top:rgba(30,40,160,.2);--clima-particle:#ffffff}
+body.clima-cripta{--clima-tint:rgba(0,30,10,.3);--clima-c1:#40ff80;--clima-c2:#006020;--clima-fog:rgba(0,80,30,.18);--clima-card-border:rgba(40,255,100,.15);--clima-card-glow:rgba(0,120,50,.1);--clima-top:rgba(0,60,20,.2);--clima-particle:#60ff90}
+body.clima-santuario{--clima-tint:rgba(180,140,0,.12);--clima-c1:#ffe060;--clima-c2:#c09000;--clima-fog:rgba(200,160,0,.08);--clima-card-border:rgba(255,220,60,.2);--clima-card-glow:rgba(200,160,0,.1);--clima-top:rgba(180,140,0,.14);--clima-particle:#ffe880}
+body.clima-biblioteca{--clima-tint:rgba(80,40,0,.14);--clima-c1:#d4a060;--clima-c2:#804020;--clima-fog:rgba(120,60,0,.09);--clima-card-border:rgba(200,140,60,.16);--clima-card-glow:rgba(160,80,20,.08);--clima-top:rgba(120,60,0,.12);--clima-particle:#d8aa70}
 
 /* ── Overlay atmosférico (::before do body) ── */
 body::before{
@@ -481,6 +580,13 @@ body[class*="clima-"] #clima-canvas{opacity:1}
 .clima-btn.on.etereo{border-color:rgba(200,80,255,.6);background:rgba(80,0,180,.3);box-shadow:0 0 18px -3px rgba(180,40,255,.4),inset 0 1px 0 rgba(220,120,255,.12)}
 .clima-btn.on.vulcao{border-color:rgba(255,80,20,.55);background:rgba(120,20,0,.32);box-shadow:0 0 14px -3px rgba(255,60,0,.35),inset 0 1px 0 rgba(255,120,60,.12)}
 .clima-btn.on.abismo{border-color:rgba(100,60,180,.45);background:rgba(5,0,30,.5);box-shadow:0 0 14px -3px rgba(60,20,140,.35),inset 0 1px 0 rgba(120,80,200,.08)}
+.clima-btn.on.oceano{border-color:rgba(20,180,255,.5);background:rgba(0,30,80,.3);box-shadow:0 0 14px -3px rgba(0,160,255,.3),inset 0 1px 0 rgba(60,200,255,.12)}
+.clima-btn.on.nevoa{border-color:rgba(180,200,255,.4);background:rgba(80,90,140,.2);box-shadow:0 0 14px -3px rgba(160,180,255,.2),inset 0 1px 0 rgba(200,220,255,.1)}
+.clima-btn.on.deserto{border-color:rgba(255,160,40,.5);background:rgba(100,50,0,.3);box-shadow:0 0 14px -3px rgba(255,120,0,.3),inset 0 1px 0 rgba(255,180,60,.12)}
+.clima-btn.on.tempestade{border-color:rgba(120,140,255,.55);background:rgba(10,15,80,.35);box-shadow:0 0 18px -3px rgba(80,100,255,.4),inset 0 1px 0 rgba(180,200,255,.1)}
+.clima-btn.on.cripta{border-color:rgba(40,255,100,.4);background:rgba(0,20,8,.4);box-shadow:0 0 14px -3px rgba(20,200,70,.3),inset 0 1px 0 rgba(60,255,120,.1)}
+.clima-btn.on.santuario{border-color:rgba(255,220,60,.5);background:rgba(80,60,0,.25);box-shadow:0 0 14px -3px rgba(220,180,0,.3),inset 0 1px 0 rgba(255,240,100,.12)}
+.clima-btn.on.biblioteca{border-color:rgba(200,140,60,.45);background:rgba(60,30,0,.25);box-shadow:0 0 14px -3px rgba(180,100,20,.28),inset 0 1px 0 rgba(220,160,80,.1)}
 
 /* Badge de clima activo no topbar */
 #clima-active-badge{
@@ -517,6 +623,93 @@ body[class*="clima-"] #clima-active-badge{display:flex}
 /* ━━━ BOTÃO REAÇÃO NA TOPBAR ━━━ */
 .top-btn.reacao{border-color:rgba(255,200,80,.3);color:rgba(255,200,80,.8);background:rgba(255,150,0,.05)}
 .top-btn.reacao:hover{background:rgba(255,150,0,.12);border-color:rgba(255,200,80,.6);color:#ffd080}
+
+/* ━━━ NPC COMPLETO ━━━ */
+.npc-card-full{background:var(--card);border:1px solid var(--br2);border-radius:8px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.npc-card-full.active-npc{border-color:rgba(240,92,92,.5);box-shadow:0 0 14px -4px rgba(240,92,92,.3)}
+.npc-topline-full{height:2px;background:linear-gradient(90deg,transparent,rgba(240,92,92,.7),transparent)}
+.npc-head-full{padding:10px 12px 6px;display:flex;align-items:center;gap:8px}
+.npc-gem{width:24px;height:24px;border-radius:3px;transform:rotate(45deg);flex-shrink:0;background:radial-gradient(135deg,#ffd0d0,#f05c5c,#7a0a0a);box-shadow:0 0 10px rgba(240,92,92,.4)}
+.npc-info-full{flex:1;min-width:0}
+.npc-nome-full{font-family:var(--display);font-size:.75rem;font-weight:700;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.npc-tipo-full{font-family:var(--mono);font-size:.38rem;color:var(--tx3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+.npc-init-badge{font-family:var(--mono);font-size:.55rem;color:var(--gold);background:var(--gold-d);border:1px solid var(--gold-b);border-radius:3px;padding:1px 6px;flex-shrink:0}
+.npc-bars-full{padding:0 12px 6px}
+.npc-bar-meta-full{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.4rem;color:var(--tx3);margin-bottom:2px}
+.npc-bar-track-full{height:5px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:4px}
+.npc-bar-fill-full{height:100%;background:linear-gradient(90deg,#c0392b,#e74c3c,#ff6b6b);border-radius:3px;transition:width .4s}
+.npc-controls-full{padding:0 12px 10px;display:flex;flex-direction:column;gap:4px}
+.npc-ctrl-row{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.npc-ctrl-btn{background:var(--bg3);border:1px solid var(--br);border-radius:4px;color:var(--tx3);font-family:var(--mono);font-size:.4rem;letter-spacing:.06em;padding:4px 6px;cursor:pointer;text-transform:uppercase;transition:all .15s;text-align:center}
+.npc-ctrl-btn:hover{border-color:var(--br2);color:var(--tx)}
+.npc-ctrl-btn.dmg:hover{border-color:var(--real-b);color:var(--real);background:var(--real-d)}
+.npc-ctrl-btn.heal:hover{border-color:var(--tempo-b);color:var(--tempo);background:var(--tempo-d)}
+.npc-ctrl-btn.del:hover{border-color:rgba(240,92,92,.3);color:var(--real)}
+.npc-ctrl-btn.wide{grid-column:1/-1}
+.npc-edit-row{display:flex;gap:4px;align-items:center}
+.npc-edit-input{background:var(--bg4);border:1px solid var(--br2);border-radius:3px;color:var(--tx);font-family:var(--mono);font-size:.46rem;padding:3px 6px;outline:none;width:100%}
+.npc-edit-input:focus{border-color:var(--gold-b)}
+.npc-conds{padding:0 12px 8px;display:flex;flex-wrap:wrap;gap:3px}
+.npc-cond-chip{font-family:var(--mono);font-size:.38rem;letter-spacing:.06em;padding:1px 5px;border-radius:2px;border:1px solid rgba(240,92,92,.3);background:rgba(240,92,92,.06);color:#e07070;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.npc-cond-chip:hover{background:rgba(240,92,92,.18)}
+
+/* ━━━ MODAL NPC ━━━ */
+#modal-npc .modal{width:380px}
+.npc-modal-tipo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:10px}
+.npc-tipo-btn{background:var(--bg3);border:1px solid var(--br);border-radius:5px;color:var(--tx3);font-family:var(--mono);font-size:.42rem;letter-spacing:.08em;padding:7px 4px;cursor:pointer;text-transform:uppercase;transition:all .2s;text-align:center}
+.npc-tipo-btn.on{border-color:rgba(240,92,92,.4);color:var(--real);background:rgba(240,92,92,.07)}
+
+/* ━━━ GALERIA DE IMAGENS ━━━ */
+#img-gallery-bar{
+  border-top:1px solid var(--br2);
+  background:rgba(4,4,10,.92);
+  backdrop-filter:blur(16px);
+  padding:10px 16px 10px;
+  display:flex;flex-direction:column;gap:8px;
+  flex-shrink:0;
+  position:relative;z-index:50;
+}
+.img-gallery-hdr{display:flex;align-items:center;gap:8px}
+.img-gallery-title{font-family:var(--display);font-size:.52rem;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:6px;flex:1}
+.img-gallery-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,var(--gold-b),transparent);opacity:.5;max-width:160px}
+.img-gallery-strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--br3) transparent;padding-bottom:4px;min-height:72px;align-items:center}
+.img-gallery-strip:empty::after{content:'Nenhuma imagem — clique em + para adicionar';font-family:var(--mono);font-size:.42rem;color:var(--tx3);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.gallery-thumb{position:relative;flex-shrink:0;border-radius:6px;overflow:hidden;cursor:pointer;border:1px solid var(--br2);transition:all .2s;background:var(--bg4)}
+.gallery-thumb img{width:72px;height:60px;object-fit:cover;display:block}
+.gallery-thumb:hover{border-color:var(--gold-b);box-shadow:0 0 10px -3px var(--gold)}
+.gallery-thumb-del{position:absolute;top:2px;right:2px;width:16px;height:16px;background:rgba(240,92,92,.85);border:none;border-radius:2px;color:#fff;font-size:8px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all .15s}
+.gallery-thumb:hover .gallery-thumb-del{display:flex}
+.img-upload-btn{flex-shrink:0;width:60px;height:60px;background:var(--bg3);border:1px dashed var(--br2);border-radius:6px;color:var(--tx3);font-size:1.4rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.img-upload-btn:hover{border-color:var(--gold-b);color:var(--gold);background:var(--gold-d)}
+
+/* ━━━ LIGHTBOX ━━━ */
+#img-lightbox{position:fixed;inset:0;z-index:9200;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.92);backdrop-filter:blur(8px)}
+#img-lightbox.active{display:flex}
+#img-lightbox-img{max-width:90vw;max-height:85vh;border-radius:10px;box-shadow:0 0 60px rgba(0,0,0,.6);border:1px solid var(--br2)}
+#img-lightbox-close{position:fixed;top:18px;right:22px;background:rgba(255,255,255,.08);border:1px solid var(--br2);border-radius:50%;width:36px;height:36px;color:#fff;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:9201}
+#img-lightbox-close:hover{background:var(--real-d);border-color:var(--real-b);color:var(--real)}
+#img-lightbox-caption{position:fixed;bottom:20px;font-family:var(--mono);font-size:.46rem;letter-spacing:.12em;color:var(--tx2);text-transform:uppercase}
+
+/* ━━━ ABAS ARENA com Memórias ━━━ */
+/* ━━━ MEMÓRIAS DE DOCUMENTO ━━━ */
+.memo-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.memo-card{background:var(--bg3);border:1px solid var(--br);border-radius:6px;padding:10px 12px;transition:border-color .2s;position:relative}
+.memo-card:hover{border-color:var(--br2)}
+.memo-card-title{font-family:var(--display);font-size:.62rem;color:#fff;margin-bottom:3px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.memo-card-body{font-family:var(--serif);font-size:.82rem;color:var(--tx2);line-height:1.6;white-space:pre-wrap}
+.memo-card-ts{font-family:var(--mono);font-size:.38rem;color:var(--tx3);letter-spacing:.1em;margin-top:4px}
+.memo-card-del{background:transparent;border:none;color:var(--tx3);cursor:pointer;font-size:.7rem;opacity:0;transition:all .15s;padding:2px 4px;border-radius:2px}
+.memo-card:hover .memo-card-del{opacity:1}
+.memo-card-del:hover{background:var(--real-d);color:var(--real)}
+.memo-new-form{background:var(--bg3);border:1px solid var(--br2);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.memo-input{background:var(--bg4);border:1px solid var(--br);border-radius:4px;color:var(--tx);font-family:var(--mono);font-size:.5rem;padding:5px 8px;outline:none;width:100%}
+.memo-input:focus{border-color:var(--gold-b)}
+.memo-textarea{background:var(--bg4);border:1px solid var(--br);border-radius:4px;color:var(--tx);font-family:var(--serif);font-size:.85rem;padding:6px 8px;outline:none;width:100%;resize:vertical;min-height:70px;line-height:1.6}
+.memo-textarea:focus{border-color:var(--gold-b)}
+.memo-save-btn{background:var(--gold-d);border:1px solid var(--gold-b);border-radius:4px;color:var(--gold);font-family:var(--mono);font-size:.44rem;letter-spacing:.1em;padding:5px 12px;cursor:pointer;text-transform:uppercase;transition:all .2s;align-self:flex-end}
+.memo-save-btn:hover{background:rgba(232,196,74,.18);box-shadow:0 0 12px -4px var(--gold)}
+.memo-empty{font-family:var(--mono);font-size:.44rem;color:var(--tx3);text-align:center;padding:16px;border:1px dashed var(--br);border-radius:6px;letter-spacing:.1em;text-transform:uppercase}
+.memo-tag{display:inline-block;font-family:var(--mono);font-size:.36rem;letter-spacing:.08em;padding:1px 6px;border-radius:2px;background:var(--gold-d);border:1px solid var(--gold-b);color:var(--gold);text-transform:uppercase;margin-right:4px}
 
 /* ━━━ ALERTA "SUA VEZ" ━━━ */
 #sua-vez-banner{position:fixed;top:0;left:50%;transform:translateX(-50%) translateY(-120%);z-index:9500;background:linear-gradient(135deg,rgba(232,196,74,.18),rgba(232,196,74,.08));border:1px solid var(--gold-b);border-top:none;border-radius:0 0 12px 12px;padding:10px 32px 12px;text-align:center;backdrop-filter:blur(20px);box-shadow:0 8px 40px rgba(232,196,74,.15);transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
@@ -679,8 +872,8 @@ body[class*="clima-"] #clima-active-badge{display:flex}
       </label>
     </div>
     <div class="modal-btns">
-      <button class="modal-btn" onclick="closeModal('modal-import');initArena()">Entrar sem fichas</button>
-      <button class="modal-btn primary" onclick="closeModal('modal-import');initArena()">⚔ Entrar na Arena</button>
+      <button class="modal-btn" onclick="closeModal('modal-import')">Entrar sem fichas</button>
+      <button class="modal-btn primary" onclick="closeModal('modal-import')">⚔ Entrar na Arena</button>
     </div>
   </div>
 </div>
@@ -809,13 +1002,76 @@ function closeFichas(){ document.getElementById('modal-fichas').classList.remove
 
   <div id="main">
     <div id="arena">
-      <div class="portadores-grid" id="portadores-grid" data-section="section-portadores"></div>
-      <div id="log-panel" data-section="section-log">
-        <div class="section-hdr" style="border-bottom:1px solid var(--br)">
-          <div class="section-title" style="color:var(--tx2)">📜 Log</div>
-          <button onclick="clearLog()" style="background:transparent;border:1px solid rgba(240,92,92,.2);border-radius:4px;color:rgba(240,92,92,.5);font-family:var(--mono);font-size:.4rem;letter-spacing:.12em;padding:3px 10px;cursor:pointer;text-transform:uppercase;transition:all .2s" onmouseover="this.style.background='rgba(240,92,92,.08)';this.style.borderColor='rgba(240,92,92,.45)';this.style.color='var(--real)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(240,92,92,.2)';this.style.color='rgba(240,92,92,.5)'">✕ Limpar</button>
+      <!-- ABAS -->
+      <div id="arena-tabs">
+        <button class="arena-tab active" id="tab-portadores" onclick="switchTab('portadores')">⚔ Portadores</button>
+        <button class="arena-tab" id="tab-npcs" onclick="switchTab('npcs')">👹 Adversários <span class="tab-badge" id="npc-count"></span></button>
+        <button class="arena-tab" id="tab-memorias" onclick="switchTab('memorias')">📖 Memórias</button>
+        <button class="arena-tab" id="tab-log" onclick="switchTab('log')">📜 Log <span class="tab-badge" id="log-count"></span></button>
+      </div>
+      <div id="arena-content">
+        <!-- PAINEL PORTADORES -->
+        <div class="arena-panel active" id="panel-portadores">
+          <div class="portadores-grid" id="portadores-grid" data-section="section-portadores"></div>
         </div>
-        <div class="log-scroll" id="log-scroll"></div>
+        <!-- PAINEL ADVERSÁRIOS -->
+        <div class="arena-panel" id="panel-npcs">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <div style="font-family:var(--mono);font-size:.44rem;letter-spacing:.14em;color:var(--tx3);text-transform:uppercase">Adversários em Campo</div>
+            <button onclick="openModal('modal-npc')" style="background:var(--bg3);border:1px solid var(--br2);border-radius:4px;color:var(--tx2);font-family:var(--mono);font-size:.42rem;letter-spacing:.08em;padding:4px 10px;cursor:pointer;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor='var(--gold-b)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--br2)';this.style.color='var(--tx2)'">+ Inimigo</button>
+          </div>
+          <div class="npc-grid" id="npc-grid">
+            <div class="npc-empty" id="npc-empty">Nenhum adversário em campo</div>
+          </div>
+        </div>
+        <!-- PAINEL MEMÓRIAS -->
+        <div class="arena-panel" id="panel-memorias">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <div style="font-family:var(--display);font-size:.6rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase">📖 Memórias de Documento</div>
+            <div style="font-family:var(--mono);font-size:.4rem;color:var(--tx3);letter-spacing:.08em">Notas sincronizadas para todos</div>
+          </div>
+          <!-- Formulário nova memória -->
+          <div class="memo-new-form" style="margin-bottom:10px">
+            <input class="memo-input" id="memo-titulo-input" placeholder="Título da memória…" maxlength="80">
+            <select class="memo-input" id="memo-tag-input" style="cursor:pointer">
+              <option value="nota">📝 Nota</option>
+              <option value="segredo">🔒 Segredo</option>
+              <option value="missao">⚔ Missão</option>
+              <option value="npc">👤 NPC</option>
+              <option value="lugar">🗺 Lugar</option>
+              <option value="item">🎒 Item</option>
+              <option value="regra">📜 Regra</option>
+            </select>
+            <textarea class="memo-textarea" id="memo-corpo-input" placeholder="Conteúdo da memória… suporta texto livre, listas, descrições."></textarea>
+            <button class="memo-save-btn" onclick="saveMemo()">✦ Salvar Memória</button>
+          </div>
+          <!-- Lista de memórias -->
+          <div class="memo-list" id="memo-list">
+            <div class="memo-empty" id="memo-empty">Nenhuma memória registrada ainda.</div>
+          </div>
+        </div>
+        <!-- PAINEL LOG -->
+        <div class="arena-panel" id="panel-log">
+          <div id="log-panel" style="background:var(--card);border:1px solid var(--br);border-radius:10px;overflow:hidden;display:flex;flex-direction:column">
+            <div class="section-hdr" style="border-bottom:1px solid var(--br);padding:10px 14px">
+              <div class="section-title" style="color:var(--tx2)">📜 Log de Combate</div>
+              <button onclick="clearLog()" style="background:transparent;border:1px solid rgba(240,92,92,.2);border-radius:4px;color:rgba(240,92,92,.5);font-family:var(--mono);font-size:.4rem;letter-spacing:.12em;padding:3px 10px;cursor:pointer;text-transform:uppercase;transition:all .2s" onmouseover="this.style.background='rgba(240,92,92,.08)';this.style.color='var(--real)'" onmouseout="this.style.background='transparent';this.style.color='rgba(240,92,92,.5)'">✕ Limpar</button>
+            </div>
+            <div class="log-scroll" id="log-scroll" style="max-height:calc(100vh - 160px)"></div>
+          </div>
+        </div>
+      </div>
+      <!-- ══ GALERIA DE IMAGENS ══ -->
+      <div id="img-gallery-bar">
+        <div class="img-gallery-hdr">
+          <div class="img-gallery-title">🖼 Galeria da Sessão</div>
+          <label style="cursor:pointer;display:flex;align-items:center">
+            <div class="img-upload-btn" title="Adicionar imagem">＋</div>
+            <input type="file" accept="image/*" style="display:none" onchange="uploadGalleryImage(this)">
+          </label>
+          <div style="font-family:var(--mono);font-size:.4rem;color:var(--tx3);letter-spacing:.08em;margin-left:6px">Visível para todos</div>
+        </div>
+        <div class="img-gallery-strip" id="img-gallery-strip"></div>
       </div>
     </div>
 
@@ -829,6 +1085,13 @@ function closeFichas(){ document.getElementById('modal-fichas').classList.remove
           <button class="clima-btn etereo" id="clima-etereo" onclick="setClima('etereo')"><span class="c-icon">✨</span><span class="c-label">Plano Etéreo</span></button>
           <button class="clima-btn vulcao" id="clima-vulcao" onclick="setClima('vulcao')"><span class="c-icon">🌋</span><span class="c-label">Vulcão</span></button>
           <button class="clima-btn abismo" id="clima-abismo" onclick="setClima('abismo')"><span class="c-icon">🌑</span><span class="c-label">Abismo</span></button>
+          <button class="clima-btn oceano" id="clima-oceano" onclick="setClima('oceano')"><span class="c-icon">🌊</span><span class="c-label">Oceano</span></button>
+          <button class="clima-btn nevoa" id="clima-nevoa" onclick="setClima('nevoa')"><span class="c-icon">🌫</span><span class="c-label">Névoa</span></button>
+          <button class="clima-btn deserto" id="clima-deserto" onclick="setClima('deserto')"><span class="c-icon">🏜</span><span class="c-label">Deserto</span></button>
+          <button class="clima-btn tempestade" id="clima-tempestade" onclick="setClima('tempestade')"><span class="c-icon">⚡</span><span class="c-label">Tempestade</span></button>
+          <button class="clima-btn cripta" id="clima-cripta" onclick="setClima('cripta')"><span class="c-icon">💀</span><span class="c-label">Cripta</span></button>
+          <button class="clima-btn santuario" id="clima-santuario" onclick="setClima('santuario')"><span class="c-icon">🕍</span><span class="c-label">Santuário</span></button>
+          <button class="clima-btn biblioteca" id="clima-biblioteca" onclick="setClima('biblioteca')"><span class="c-icon">📚</span><span class="c-label">Biblioteca</span></button>
         </div>
         <div class="clima-nome">Cenário: <span id="clima-nome-display">Nenhum</span></div>
       </div>
@@ -873,8 +1136,14 @@ function closeFichas(){ document.getElementById('modal-fichas').classList.remove
         </div>
         <!-- Histórico de rolagens por personagem -->
         <div class="roll-history-panel" id="roll-history-panel">
-          <div class="roll-hist-title">Histórico de rolagens</div>
-          <div id="roll-history-list"></div>
+          <div class="roll-hist-tabs">
+            <button class="rht-btn active todos" id="rht-todos" onclick="switchHistTab('todos')">Todos</button>
+            <button class="rht-btn mestre" id="rht-mestre" onclick="switchHistTab('mestre')">👑</button>
+            <button class="rht-btn espaco" id="rht-espaco" onclick="switchHistTab('espaco')">◇</button>
+            <button class="rht-btn tempo" id="rht-tempo" onclick="switchHistTab('tempo')">◈</button>
+            <button class="rht-btn realidade" id="rht-realidade" onclick="switchHistTab('realidade')">⬡</button>
+          </div>
+          <div class="roll-hist-list" id="roll-history-list"></div>
         </div>
       </div>
 
@@ -905,6 +1174,66 @@ function closeFichas(){ document.getElementById('modal-fichas').classList.remove
     <div class="turn-display">Vez de: <strong id="current-turn-name">—</strong></div>
     <div class="bottombar-spacer"></div>
     <div class="round-ctr">Round <strong id="round-num">1</strong></div>
+  </div>
+</div>
+
+<!-- ══ LIGHTBOX ══ -->
+<div id="img-lightbox" onclick="if(event.target===this)closeLightbox()">
+  <button id="img-lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="img-lightbox-img" src="" alt="">
+  <div id="img-lightbox-caption"></div>
+</div>
+
+<!-- ══ MODAL: NPC / ADVERSÁRIO ══ -->
+<div class="modal-overlay" id="modal-npc">
+  <div class="modal" id="modal-npc-inner" style="width:400px">
+    <button class="modal-close" onclick="closeModal('modal-npc')">✕</button>
+    <div class="modal-title">👹 Adicionar Adversário</div>
+    <label>Nome</label>
+    <input type="text" id="npc-nome-input" placeholder="Ex: Guardião das Sombras" style="margin-bottom:8px">
+    <label>Tipo / Categoria</label>
+    <div class="npc-modal-tipo-grid" id="npc-tipo-grid">
+      <button class="npc-tipo-btn on" data-tipo="Inimigo" onclick="selectNpcTipo(this)">⚔ Inimigo</button>
+      <button class="npc-tipo-btn" data-tipo="Elite" onclick="selectNpcTipo(this)">⭐ Elite</button>
+      <button class="npc-tipo-btn" data-tipo="Chefe" onclick="selectNpcTipo(this)">💀 Chefe</button>
+      <button class="npc-tipo-btn" data-tipo="Minion" onclick="selectNpcTipo(this)">👥 Minion</button>
+      <button class="npc-tipo-btn" data-tipo="Neutro" onclick="selectNpcTipo(this)">🤝 Neutro</button>
+      <button class="npc-tipo-btn" data-tipo="Aliado" onclick="selectNpcTipo(this)">🛡 Aliado</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label>HP Máximo</label>
+        <input type="number" id="npc-hp-input" value="30" min="1">
+      </div>
+      <div>
+        <label>DEF</label>
+        <input type="number" id="npc-def-input" value="12" min="0">
+      </div>
+      <div>
+        <label>Iniciativa</label>
+        <input type="number" id="npc-init-input" value="0">
+      </div>
+    </div>
+    <label>Descrição / Notas (opcional)</label>
+    <textarea id="npc-desc-input" style="min-height:50px;margin-bottom:8px" placeholder="Habilidades especiais, fraquezas…"></textarea>
+    <div class="modal-btns">
+      <button class="modal-btn" onclick="closeModal('modal-npc')">Cancelar</button>
+      <button class="modal-btn primary" onclick="addNpc()">👹 Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: NPC HP ══ -->
+<div class="modal-overlay" id="modal-npc-hp">
+  <div class="modal" style="width:320px">
+    <button class="modal-close" onclick="closeModal('modal-npc-hp')">✕</button>
+    <div class="modal-title" id="modal-npc-hp-title">Dano / Cura — NPC</div>
+    <label>Quantidade</label>
+    <input type="number" id="modal-npc-hp-val" placeholder="0" min="0">
+    <div class="modal-btns">
+      <button class="modal-btn red" onclick="applyNpcHP('damage')">⚔ Dano</button>
+      <button class="modal-btn" style="border-color:var(--tempo-b);color:var(--tempo)" onclick="applyNpcHP('heal')">✦ Curar</button>
+    </div>
   </div>
 </div>
 
@@ -941,6 +1270,7 @@ let state = {
     { id:'tempo',     nome:'Portador de Tempo',  init:0, tipo:'portador' },
     { id:'realidade', nome:'Portador de Realidade', init:0, tipo:'portador' },
   ],
+  npcs: [],
   log: [],
   hiddenStatuses: {},
   marcoTarget: null,
@@ -1102,31 +1432,76 @@ function addRollToHistory(roller, rollData, logMsg) {
 function renderRollHistory() {
   const list = document.getElementById('roll-history-list');
   if(!list) return;
-  const allEntries = [];
   if(!state.rollHistory) return;
+
+  // Atualiza nomes das abas com personagens
+  ['espaco','tempo','realidade'].forEach(tipo => {
+    const btn = document.getElementById('rht-' + tipo);
+    if(!btn) return;
+    const el = EL[tipo];
+    const p = state.portadores[tipo];
+    const nome = p.nome !== '—' ? p.nome.split(' ')[0] : el.icon;
+    btn.textContent = el.icon + ' ' + nome;
+    btn.title = p.nome !== '—' ? p.nome : el.label;
+  });
+
+  const allEntries = [];
+  const filterRoller = _activeHistTab === 'todos' ? null : _activeHistTab;
   ['mestre','espaco','tempo','realidade'].forEach(roller => {
+    if(filterRoller && roller !== filterRoller) return;
     (state.rollHistory[roller]||[]).forEach(e => allEntries.push({...e, roller}));
   });
   allEntries.sort((a,b)=>(b.ts||0)-(a.ts||0));
-  const recent = allEntries.slice(0, 12);
+  const recent = allEntries.slice(0, 20);
   list.innerHTML = '';
   if(!recent.length) {
-    list.innerHTML = '<div style="font-family:var(--mono);font-size:.42rem;color:var(--tx3);text-align:center;padding:6px">Nenhuma rolagem</div>';
+    list.innerHTML = '<div style="font-family:var(--mono);font-size:.42rem;color:var(--tx3);text-align:center;padding:8px 0">Nenhuma rolagem</div>';
     return;
   }
   recent.forEach(e => {
     const el = e.roller !== 'mestre' ? EL[e.roller] : null;
     const icon = el ? el.icon : '👑';
-    const cls = el ? el.cls : 'mestre';
     const nome = el ? (state.portadores[e.roller]?.nome !== '—' ? state.portadores[e.roller]?.nome.split(' ')[0] : el.icon) : 'Mestre';
     const formula = `${e.qty}d${e.faces}${e.mod!==0?(e.mod>0?'+':'')+e.mod:''}`;
     const isCrit = e.isCrit, isFail = e.isFail;
     const totalColor = isCrit?'#ffd700':isFail?'var(--real)':'#fff';
+    const accentColor = el ? el.accent : '#e8c44a';
+    const showSecret = e.secret && state.mode !== 'mestre';
     const div = document.createElement('div');
     div.className = 'roll-hist-entry';
-    div.innerHTML = `<span class="roll-hist-who">${icon}</span><span class="roll-hist-name" style="${el?`color:${el.accent}`:'color:var(--gold)'}">${nome}</span><span class="roll-hist-formula">${e.secret?'🔒 ???':formula}</span><span class="roll-hist-total" style="color:${totalColor}">${e.secret&&state.mode!=='mestre'?'?':e.total}${isCrit?' ⭐':isFail?' 💀':''}</span>`;
+    div.style.cssText = `background:rgba(255,255,255,.015);border-radius:4px;padding:3px 6px;margin-bottom:1px;border-left:2px solid ${accentColor}30`;
+    div.innerHTML = `
+      <span class="roll-hist-who" style="font-size:.55rem">${icon}</span>
+      <span class="roll-hist-name" style="color:${accentColor};min-width:50px">${nome}</span>
+      <span class="roll-hist-formula" style="color:var(--tx3)">${showSecret ? '🔒 ???' : formula}</span>
+      <span class="roll-hist-total" style="color:${totalColor};font-weight:700">${showSecret ? '?' : e.total}${isCrit ? ' ⭐' : isFail ? ' 💀' : ''}</span>`;
     list.appendChild(div);
   });
+}
+
+// ═══════════════════════════════════════════════════════
+// ABAS DO ARENA
+// ═══════════════════════════════════════════════════════
+let _activeTab = 'portadores';
+function switchTab(tab) {
+  _activeTab = tab;
+  ['portadores','npcs','memorias','log'].forEach(t => {
+    document.getElementById('tab-' + t)?.classList.toggle('active', t === tab);
+    document.getElementById('panel-' + t)?.classList.toggle('active', t === tab);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// ABAS DO HISTÓRICO DE ROLAGENS
+// ═══════════════════════════════════════════════════════
+let _activeHistTab = 'todos';
+function switchHistTab(tab) {
+  _activeHistTab = tab;
+  ['todos','mestre','espaco','tempo','realidade'].forEach(t => {
+    const btn = document.getElementById('rht-' + t);
+    if(btn) { btn.classList.toggle('active', t === tab); btn.classList.toggle(t, true); }
+  });
+  renderRollHistory();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1225,6 +1600,7 @@ function applyFichaToState(tipo, data, silent=false) {
 function renderAll() {
   renderPortadores();
   renderInitiative();
+  renderNpcs();
   renderCondTarget();
   renderCondGrid();
   renderCurrentTurn();
@@ -1364,6 +1740,11 @@ function renderCondTarget() {
     o.value = tipo; o.textContent = p.nome !== '—' ? p.nome : tipo;
     sel.appendChild(o);
   });
+  if(state.npcs) state.npcs.forEach(npc => {
+    const o = document.createElement('option');
+    o.value = 'npc:' + npc.id; o.textContent = `👹 ${npc.nome}`;
+    sel.appendChild(o);
+  });
   sel.value = cur;
 }
 
@@ -1372,7 +1753,11 @@ function renderCondGrid() {
   grid.innerHTML = '';
   const target = document.getElementById('cond-target-sel').value;
   let activeConds = [];
-  if(state.portadores[target]) {
+  if(target.startsWith('npc:')) {
+    const npcId = target.replace('npc:', '');
+    const npc = state.npcs?.find(n => n.id === npcId);
+    activeConds = npc?.conditions || [];
+  } else if(state.portadores[target]) {
     activeConds = state.portadores[target].conditions || [];
   }
   CONDICOES.forEach(c => {
@@ -1458,6 +1843,62 @@ const CLIMAS = {
     particleDrift:0.15, particleOpacity:[0.06,0.25],
     ambColor:['#200040','#8060c0','#100020'],
     desc:'Silêncio absoluto. O vazio te observa de volta.',
+  },
+  oceano: {
+    label:'Oceano', icon:'🌊',
+    particle:'#40d8ff', particleShape:'circle',
+    particleCount:45, particleSpeed:0.35, particleSize:[2,6],
+    particleDrift:1.2, particleOpacity:[0.08,0.35],
+    ambColor:['#0060a0','#20d0ff','#003060'],
+    desc:'As profundezas guardam segredos antigos. A maré não para.',
+  },
+  nevoa: {
+    label:'Névoa', icon:'🌫',
+    particle:'#d0e0ff', particleShape:'circle',
+    particleCount:60, particleSpeed:0.1, particleSize:[3,10],
+    particleDrift:0.5, particleOpacity:[0.03,0.12],
+    ambColor:['#8090c0','#c0d8ff','#6070a0'],
+    desc:'A névoa engole os contornos. Nada é certo aqui.',
+  },
+  deserto: {
+    label:'Deserto', icon:'🏜',
+    particle:'#ffc060', particleShape:'square',
+    particleCount:55, particleSpeed:0.8, particleSize:[1,3],
+    particleDrift:2.0, particleOpacity:[0.1,0.4],
+    ambColor:['#c06000','#ffb040','#803000'],
+    desc:'O calor distorce o horizonte. A areia é implacável.',
+  },
+  tempestade: {
+    label:'Tempestade', icon:'⚡',
+    particle:'#ffffff', particleShape:'line',
+    particleCount:70, particleSpeed:4.0, particleSize:[1,2],
+    particleDrift:0.2, particleOpacity:[0.1,0.5],
+    ambColor:['#3040c0','#a0b8ff','#1020a0'],
+    desc:'Relâmpagos rasgam o céu. Ninguém está seguro.',
+  },
+  cripta: {
+    label:'Cripta', icon:'💀',
+    particle:'#60ff90', particleShape:'circle',
+    particleCount:25, particleSpeed:0.2, particleSize:[1,3],
+    particleDrift:0.3, particleOpacity:[0.06,0.28],
+    ambColor:['#006020','#40ff80','#003010'],
+    desc:'O ar cheira a pedra e memória. Os mortos ainda sussurram.',
+  },
+  santuario: {
+    label:'Santuário', icon:'🕍',
+    particle:'#ffe880', particleShape:'star',
+    particleCount:35, particleSpeed:0.2, particleSize:[1,4],
+    particleDrift:0.4, particleOpacity:[0.1,0.5],
+    ambColor:['#c09000','#ffe060','#806000'],
+    desc:'Luz sagrada permeia cada pedra. Poder antigo ressoa aqui.',
+  },
+  biblioteca: {
+    label:'Biblioteca', icon:'📚',
+    particle:'#d8aa70', particleShape:'square',
+    particleCount:20, particleSpeed:0.15, particleSize:[1,2],
+    particleDrift:0.6, particleOpacity:[0.08,0.3],
+    ambColor:['#804020','#d4a060','#502010'],
+    desc:'Páginas virando no silêncio. O conhecimento proibido espera.',
   },
 };
 
@@ -1789,6 +2230,11 @@ function toggleHideStatus(tipo) {
 function toggleCondition(target, cond) {
   if(!target) return;
   let arr;
+  if(target.startsWith('npc:')) {
+    const npcId = target.replace('npc:', '');
+    const npc = state.npcs?.find(n => n.id === npcId);
+    if(npc) { toggleNpcCond(npcId, cond); return; }
+  }
   if(state.portadores[target]){ arr=state.portadores[target].conditions; }
   if(!arr) return;
   const idx=arr.indexOf(cond);
@@ -1931,15 +2377,17 @@ function appendLogEntry({ts,msg,type}){
   const scroll=document.getElementById('log-scroll');
   const div=document.createElement('div'); div.className='log-entry';
   const isHidden=type==='gm-only'&&state.mode!=='mestre';
-  div.innerHTML=`<span class="log-ts">${ts}</span><span class="log-msg ${type}${isHidden?' hidden-msg':''}">${isHidden?'[Ação secreta do Mestre]':msg}</span>`;
+  div.innerHTML=`<span class="log-ts">${ts}</span><span class="log-msg ${type}${isHidden?' hidden-msg':''}">` + (isHidden?'[Ação secreta do Mestre]':msg) + `</span>`;
   scroll.appendChild(div);
   scroll.scrollTop=scroll.scrollHeight;
+  const badge = document.getElementById('log-count');
+  if(badge && state.log.length > 0) badge.textContent = state.log.length > 99 ? '99+' : state.log.length;
 }
 function clearLog(){
   state.log=[];
   document.getElementById('log-scroll').innerHTML='';
   if(_db) _db.ref('arena/log').remove().catch(()=>{});
-  _seenLogKeys = new Set();
+  _myWrites.log = new Set(); // reseta tracking de chaves de log
 }
 function rebuildLog(){ const s=document.getElementById('log-scroll'); s.innerHTML=''; state.log.forEach(e=>appendLogEntry(e)); }
 
@@ -1960,15 +2408,15 @@ function openModal(id){ const m=document.getElementById(id); m.classList.add('ac
 function closeModal(id){ const m=document.getElementById(id); m.classList.remove('active'); m.style.display='none'; }
 
 // ═══════════════════════════════════════════════════════
-// FIREBASE — sync em tempo real
+// FIREBASE — sync em tempo real (versão limpa)
 // ═══════════════════════════════════════════════════════
 
-// ID único por aba para evitar loop de sync
-const _CLIENT_ID = Math.random().toString(36).slice(2,10);
+const _CLIENT_ID = Math.random().toString(36).slice(2, 10);
 let _db = null;
-let _lastSaveTs = 0;
-let _seenEvents = new Set();
-let _seenLogKeys = new Set();
+
+// ── Controle de echo: guarda refs e timestamps das últimas escritas ──
+// Cada nó tem seu próprio timestamp para não bloquear updates de outros jogadores
+const _myWrites = { state: 0, initiative: 0, log: new Set(), events: new Set() };
 
 function _fbInit() {
   const cfg = {
@@ -1980,321 +2428,709 @@ function _fbInit() {
     messagingSenderId:"839388082639",
     appId:"1:839388082639:web:2c1915fa7f7184b89722ba"
   };
-  if(!firebase.apps.length) firebase.initializeApp(cfg);
+  if (!firebase.apps.length) firebase.initializeApp(cfg);
   _db = firebase.database();
 }
 
-// Salva só os campos necessários, sem ficha (muito grande) e sem mode/log (locais)
+// ── O que vai para arena/state ──
 function _buildSaveObj() {
   const portadoresSafe = {};
   ['espaco','tempo','realidade'].forEach(t => {
-    const {ficha, ...rest} = state.portadores[t];
+    const { ficha, ...rest } = state.portadores[t]; // ficha é muito grande
     portadoresSafe[t] = rest;
   });
   return {
-    portadores: portadoresSafe,
-
-    clima: state.clima || null,
-    lastRoll: state.lastRoll || null,
-    rollVisibility: state.rollVisibility || 'public',
-    hiddenStatuses: state.hiddenStatuses || {},
+    portadores:      portadoresSafe,
+    npcs:            state.npcs            || [],
+    clima:           state.clima           || null,
+    lastRoll:        state.lastRoll        || null,
+    rollVisibility:  state.rollVisibility  || 'public',
+    hiddenStatuses:  state.hiddenStatuses  || {},
   };
 }
 
+// ── save() — debounced, salva state + initiative juntos ──
 let _saveTimer = null;
 function save() {
   clearTimeout(_saveTimer);
   _saveTimer = setTimeout(() => {
-    if(!_db) return;
-    _lastSaveTs = Date.now();
-    _db.ref('arena/state').set(_buildSaveObj()).catch(console.error);
-  }, 400);
-}
-
-// Salva só iniciativa/turno/round no nó próprio — sem janela de echo
-let _initSaveTimer = null;
-let _lastInitSaveTs = 0;
-function saveInitiative() {
-  clearTimeout(_initSaveTimer);
-  _initSaveTimer = setTimeout(() => {
-    if(!_db) return;
-    _lastInitSaveTs = Date.now();
-    _db.ref('arena/initiative').set({
-      list: state.initiative,
-      turn: state.turn,
-      round: state.round,
+    if (!_db) return;
+    _myWrites.state      = Date.now();
+    _myWrites.initiative = Date.now();
+    // Escrita atômica nos dois nós ao mesmo tempo
+    _db.ref('arena').update({
+      state:      _buildSaveObj(),
+      initiative: { list: state.initiative, turn: state.turn, round: state.round },
     }).catch(console.error);
-  }, 300);
+  }, 350);
 }
 
+// saveInitiative() — para mudanças só de turno/round sem mexer no state
+let _initTimer = null;
+function saveInitiative() {
+  clearTimeout(_initTimer);
+  _initTimer = setTimeout(() => {
+    if (!_db) return;
+    _myWrites.initiative = Date.now();
+    _db.ref('arena/initiative').set({
+      list: state.initiative, turn: state.turn, round: state.round,
+    }).catch(console.error);
+  }, 250);
+}
+
+// ── Aplica dados remotos sem tocar em mode/log/ficha ──
 function _applyRemote(data) {
-  ['espaco','tempo','realidade'].forEach(t => {
-    if(data.portadores?.[t]) state.portadores[t] = { ...mkPortador(), ...data.portadores[t] };
-  });
-  if(data.hiddenStatuses) state.hiddenStatuses = data.hiddenStatuses; else state.hiddenStatuses = {};
-  state.clima        = data.clima        || null;
-  state.lastRoll     = data.lastRoll     || null;
+  if (data.portadores) {
+    ['espaco','tempo','realidade'].forEach(t => {
+      if (data.portadores[t]) {
+        // Mantém a ficha local (não vem do Firebase) e mescla o resto
+        const fichaLocal = state.portadores[t].ficha;
+        state.portadores[t] = { ...mkPortador(), ...data.portadores[t], ficha: fichaLocal };
+      }
+    });
+  }
+  if (Array.isArray(data.npcs))      state.npcs            = data.npcs;
+  if (data.hiddenStatuses)           state.hiddenStatuses  = data.hiddenStatuses;
+  else                               state.hiddenStatuses  = {};
+  state.clima          = data.clima          || null;
+  state.lastRoll       = data.lastRoll       || null;
   state.rollVisibility = data.rollVisibility || 'public';
 }
 
-// Emite evento visual (dado, marco, reação, sua vez) para todos os outros clientes
-function _emit(type, payload) {
-  if(!_db) return;
-  const ref = _db.ref('arena/events').push();
-  ref.set({ type, payload, from: _CLIENT_ID, ts: Date.now() });
-  // Auto-deleta após 8s
-  setTimeout(() => ref.remove().catch(()=>{}), 8000);
+// ── Aplica iniciativa remota ──
+function _applyRemoteInitiative(data) {
+  if (Array.isArray(data.list) && data.list.length) state.initiative = data.list;
+  if (data.turn  !== undefined) state.turn  = data.turn;
+  if (data.round !== undefined) state.round = data.round;
 }
 
-// Adiciona entrada de log no Firebase
+// ── Emite evento visual (dado, marco, reação, suaVez) ──
+function _emit(type, payload) {
+  if (!_db) return;
+  const ref = _db.ref('arena/events').push();
+  const key = ref.key;
+  _myWrites.events.add(key); // marca como nosso para ignorar no listener
+  ref.set({ type, payload, from: _CLIENT_ID, ts: Date.now() });
+  setTimeout(() => { ref.remove().catch(() => {}); _myWrites.events.delete(key); }, 9000);
+}
+
+// ── Log: push para Firebase, ignorando o echo via chave ──
 function _logPush(entry) {
-  if(!_db) return;
-  _db.ref('arena/log').push({ ...entry, _ts: Date.now() });
+  if (!_db) return;
+  const ref = _db.ref('arena/log').push();
+  _myWrites.log.add(ref.key);
+  ref.set({ ...entry, _ts: Date.now() });
 }
 
 function confirmReset() {
-  if(!confirm('Resetar toda a arena para TODOS os jogadores?')) return;
+  if (!confirm('Resetar toda a arena para TODOS os jogadores?')) return;
   state.portadores = { espaco:mkPortador(), tempo:mkPortador(), realidade:mkPortador() };
-  state.turn = 0; state.round = 1;
+  state.npcs = []; state.turn = 0; state.round = 1;
   state.clima = null; state.hiddenStatuses = {}; state.lastRoll = null;
-  state.initiative = [
-    {id:'espaco',   nome:'Portador de Espaço',   init:0, tipo:'portador'},
-    {id:'tempo',    nome:'Portador de Tempo',     init:0, tipo:'portador'},
-    {id:'realidade',nome:'Portador de Realidade', init:0, tipo:'portador'},
-  ];
   state.log = [];
-  if(_db) {
+  state.initiative = [
+    { id:'espaco',    nome:'Portador de Espaço',    init:0, tipo:'portador' },
+    { id:'tempo',     nome:'Portador de Tempo',      init:0, tipo:'portador' },
+    { id:'realidade', nome:'Portador de Realidade',  init:0, tipo:'portador' },
+  ];
+  if (_db) {
+    _myWrites.state = _myWrites.initiative = Date.now();
     _db.ref('arena').set({
-      state: _buildSaveObj(),
+      state:      _buildSaveObj(),
       initiative: { list: state.initiative, turn: 0, round: 1 },
-      log: null,
-      events: null,
+      log:        null,
+      events:     null,
+      gallery:    null,
+      memorias:   null,
     }).catch(console.error);
   }
   renderAll(); rebuildLog();
 }
 
-function load(){ return false; } // Firebase é a fonte da verdade
+function load() { return false; }
 
-// ═══════════════════════════════════════════════════════
-// OVERLAYS — aplicados localmente (via evento ou local)
-// ═══════════════════════════════════════════════════════
-
-// Aplica o display do dado (animação + números) — usado local e por evento remoto
+// ── Display do dado — usado local e por evento remoto ──
 function _applyRollDisplay(r) {
   const formula = `${r.qty}d${r.faces}${r.mod!==0?(r.mod>0?'+':'')+r.mod:''}`;
   const detail  = `[${r.rolls.join(', ')}]${r.mod!==0?` + ${r.mod}`:''}`;
   const hide    = r.secret && state.mode !== 'mestre';
   animateDie(r.faces, hide ? '?' : r.total, hide);
 
-  const display = document.getElementById('roll-display');
-  const bigEl = document.getElementById('roll-big');
-  const glyphEl = document.getElementById('roll-el-glyph');
+  const display  = document.getElementById('roll-display');
+  const bigEl    = document.getElementById('roll-big');
+  const glyphEl  = document.getElementById('roll-el-glyph');
   const whoBadge = document.getElementById('roll-who-badge');
-  const labelEl = document.getElementById('roll-result-label');
+  const labelEl  = document.getElementById('roll-result-label');
 
-  // ── Aplica classe de elemento no painel ──
   const roller = r.roller || 'mestre';
-  display.className = ''; // reset
+  display.className = '';
   const classMap = { espaco:'roll-esp', tempo:'roll-tempo', realidade:'roll-real', mestre:'roll-mestre' };
   display.classList.add(classMap[roller] || 'roll-mestre');
 
-  // ── Glyph decorativo ──
   const glyphMap = { espaco:'◇', tempo:'◈', realidade:'⬡', mestre:'♛' };
-  if(glyphEl) glyphEl.textContent = glyphMap[roller] || '♛';
+  if (glyphEl) glyphEl.textContent = glyphMap[roller] || '♛';
 
-  // ── Resultado ──
   bigEl.textContent = hide ? '???' : r.total;
   const critColor = { espaco:'#a0e8ff', tempo:'#a0ffd4', realidade:'#ffb0b0', mestre:'#ffd700' };
   bigEl.style.color = r.isCrit ? (critColor[roller]||'#ffd700') : r.isFail ? 'var(--real)' : '#fff';
+  bigEl.classList.remove('pop'); void bigEl.offsetWidth; bigEl.classList.add('pop');
 
-  // Animação pop no número
-  bigEl.classList.remove('pop');
-  void bigEl.offsetWidth;
-  bigEl.classList.add('pop');
-
-  document.getElementById('roll-formula').textContent = hide ? formula : formula+' = '+detail;
+  document.getElementById('roll-formula').textContent    = hide ? formula : formula+' = '+detail;
   document.getElementById('roll-individual').textContent = hide ? '' : (r.qty>1 ? detail : '');
   document.getElementById('hidden-indicator').style.display = hide ? 'inline-flex' : 'none';
-  document.getElementById('reveal-row').style.display = hide ? 'flex' : 'none';
+  document.getElementById('reveal-row').style.display       = hide ? 'flex' : 'none';
 
-  // ── Label dinâmico ──
-  if(labelEl) {
-    if(r.isCrit) labelEl.textContent = '★ CRÍTICO!';
-    else if(r.isFail) labelEl.textContent = '💀 FALHA CRÍTICA';
-    else labelEl.textContent = hide ? '🔒 Secreto' : 'Resultado';
+  if (labelEl) {
+    labelEl.textContent = r.isCrit ? '★ CRÍTICO!' : r.isFail ? '💀 FALHA CRÍTICA' : hide ? '🔒 Secreto' : 'Resultado';
     labelEl.style.color = r.isCrit ? (critColor[roller]||'#ffd700') : r.isFail ? 'var(--real)' : 'var(--tx3)';
   }
-
-  // ── Who rolled badge ──
-  if(whoBadge) {
+  if (whoBadge) {
     whoBadge.style.display = 'inline-block';
-    if(roller === 'mestre') {
+    if (roller === 'mestre') {
       whoBadge.className = 'roll-who-badge mestre';
       whoBadge.textContent = '👑 Mestre';
     } else {
       const el = EL[roller];
-      if(el) {
+      if (el) {
         whoBadge.className = `roll-who-badge ${el.cls}`;
         const pNome = state.portadores[roller]?.nome;
         whoBadge.textContent = `${el.icon} ${pNome && pNome !== '—' ? pNome : el.label.split(' ')[1]}`;
       }
     }
   }
-
-  if(r.isCrit){ display.classList.add('crit-flash'); setTimeout(()=>display.classList.remove('crit-flash'),600); }
-  if(r.isFail){ display.classList.add('fail-flash'); setTimeout(()=>display.classList.remove('fail-flash'),600); }
+  if (r.isCrit) { display.classList.add('crit-flash'); setTimeout(()=>display.classList.remove('crit-flash'),600); }
+  if (r.isFail) { display.classList.add('fail-flash'); setTimeout(()=>display.classList.remove('fail-flash'),600); }
 }
 
-// ═══════════════════════════════════════════════════════
-// INIT + CONEXÃO FIREBASE
-// ═══════════════════════════════════════════════════════
+// ── Status bar ──
 function _statusBar(msg, ok) {
   let bar = document.getElementById('_fbBar');
-  if(!bar){ bar=document.createElement('div'); bar.id='_fbBar';
-    bar.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:var(--mono);font-size:.46rem;letter-spacing:.12em;text-align:center;padding:5px 12px;transition:opacity .6s';
-    document.body.appendChild(bar); }
-  bar.textContent=msg; bar.style.opacity='1';
-  bar.style.background = ok?'rgba(109,232,168,.15)':'rgba(240,92,92,.15)';
-  bar.style.color = ok?'var(--tempo)':'var(--real)';
-  bar.style.borderTop = ok?'1px solid var(--tempo-b)':'1px solid var(--real-b)';
+  if (!bar) {
+    bar = document.createElement('div'); bar.id = '_fbBar';
+    bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;font-family:var(--mono);font-size:.46rem;letter-spacing:.12em;text-align:center;padding:5px 12px;transition:opacity .6s';
+    document.body.appendChild(bar);
+  }
+  bar.textContent = msg; bar.style.opacity = '1';
+  bar.style.background  = ok ? 'rgba(109,232,168,.15)' : 'rgba(240,92,92,.15)';
+  bar.style.color       = ok ? 'var(--tempo)'          : 'var(--real)';
+  bar.style.borderTop   = ok ? '1px solid var(--tempo-b)' : '1px solid var(--real-b)';
   const dot = document.getElementById('fb-dot');
-  if(dot){ dot.style.background=ok?'var(--tempo)':'var(--real)'; dot.style.boxShadow=ok?'0 0 8px var(--tempo)':'0 0 8px var(--real)'; }
-  if(ok) setTimeout(()=>{ bar.style.opacity='0'; },3000);
+  if (dot) { dot.style.background = ok?'var(--tempo)':'var(--real)'; dot.style.boxShadow = ok?'0 0 8px var(--tempo)':'0 0 8px var(--real)'; }
+  if (ok) setTimeout(() => { bar.style.opacity = '0'; }, 3000);
 }
 
+// ═══════════════════════════════════════════════════════
+// INIT + LISTENERS FIREBASE
+// ═══════════════════════════════════════════════════════
 function initArena() {
   renderAll(); rebuildLog(); previewReacao();
   initNavigation();
   updateRollerLabels();
   renderRollHistory();
 
-  // Abre modal de login para identificação do player
-  setTimeout(() => openModal('modal-login'), 600);
+  // Abre modal de identificação após render
+  setTimeout(() => openModal('modal-login'), 500);
 
   _fbInit();
-  _statusBar('🔴 Conectando…', false);
+  _statusBar('🔴 Conectando à Arena…', false);
 
-  let firstLoad = true;
+  let _firstStateLoad     = true;
+  let _firstInitLoad      = true;
 
-  // ── 1. Escuta estado principal ──
+  // ══ 1. ESTADO PRINCIPAL (portadores, npcs, clima, dado) ══
   _db.ref('arena/state').on('value', snap => {
+    // Ignora echo das nossas próprias escritas (janela de 800ms)
+    if (Date.now() - _myWrites.state < 800) return;
+
     const data = snap.val();
-    // Ignora echo das próprias escritas (janela de 1.5s)
-    if(Date.now() - _lastSaveTs < 1500) return;
-    if(!data) {
-      // Banco vazio — primeira sessão
-      if(firstLoad) {
-        firstLoad = false;
+
+    if (!data) {
+      // Banco vazio — primeira sessão, só o Mestre inicializa
+      if (_firstStateLoad) {
+        _firstStateLoad = false;
         openModal('modal-import');
-        addLog('Arena iniciada. Que os 3 Caídos lutem.','marco');
+        addLog('Arena iniciada. Que os 3 Caídos lutem.', 'marco');
         save();
         _statusBar('🟢 Arena Online — nova sessão', true);
       }
       return;
     }
+
     _applyRemote(data);
     renderAll();
     updateRollerLabels();
-    renderRollHistory();
-    buildLoginModal(); // atualiza nomes no modal
-    // Sincroniza display do dado
-    if(state.lastRoll) _applyRollDisplay({...state.lastRoll, isCrit:false, isFail:false});
-    if(firstLoad) {
-      firstLoad = false;
+    buildLoginModal();
+    if (state.lastRoll) _applyRollDisplay({ ...state.lastRoll, isCrit:false, isFail:false });
+
+    if (_firstStateLoad) {
+      _firstStateLoad = false;
       closeModal('modal-import');
       previewReacao();
-      _statusBar('🟢 Arena Online — sincronizado', true);
-    } else {
-      _statusBar('🟢 Arena Online — sincronizado', true);
     }
+    _statusBar('🟢 Arena Online', true);
   });
 
-  // ── 1b. Escuta iniciativa (nó separado — sem janela de echo) ──
+  // ══ 2. INICIATIVA, TURNO E ROUND (nó separado) ══
   _db.ref('arena/initiative').on('value', snap => {
+    if (Date.now() - _myWrites.initiative < 800) return;
     const data = snap.val();
-    if(!data) return;
-    // Ignora se a mudança veio desta própria aba (timer de 600ms)
-    if(Date.now() - _lastInitSaveTs < 600) return;
-    if(Array.isArray(data.list) && data.list.length) state.initiative = data.list;
-    if(data.turn  !== undefined) state.turn  = data.turn;
-    if(data.round !== undefined) state.round = data.round;
+    if (!data) return;
+
+    if (_firstInitLoad) _firstInitLoad = false;
+
+    _applyRemoteInitiative(data);
     renderInitiative();
     renderCurrentTurn();
-    document.getElementById('turn-num').textContent  = state.turn + 1;
-    document.getElementById('round-num').textContent = state.round;
+    renderNpcs(); // NPCs usam state.initiative para saber quem é o turno atual
+    document.getElementById('turn-num').textContent         = state.turn + 1;
+    document.getElementById('round-num').textContent        = state.round;
     document.getElementById('current-turn-name').textContent = state.initiative[state.turn]?.nome || '—';
   });
 
-  // ── 2. Escuta log ──
+  // ══ 3. LOG (deduplicado por chave Firebase) ══
   _db.ref('arena/log').on('value', snap => {
-    const data = snap.val(); if(!data) return;
+    const data = snap.val(); if (!data) return;
     Object.entries(data)
-      .sort(([,a],[,b])=>(a._ts||0)-(b._ts||0))
-      .forEach(([key,entry]) => {
-        if(_seenLogKeys.has(key)) return;
-        _seenLogKeys.add(key);
-        const already = state.log.some(l=>l.ts===entry.ts&&l.msg===entry.msg);
-        if(!already) {
-          state.log.push({ts:entry.ts, msg:entry.msg, type:entry.type});
-          appendLogEntry({ts:entry.ts, msg:entry.msg, type:entry.type});
-        }
+      .sort(([,a],[,b]) => (a._ts||0) - (b._ts||0))
+      .forEach(([key, entry]) => {
+        // Ignora logs que nós mesmos enviamos (já adicionados localmente em addLog)
+        if (_myWrites.log.has(key)) return;
+        const already = state.log.some(l => l.ts === entry.ts && l.msg === entry.msg);
+        if (already) return;
+        state.log.push({ ts:entry.ts, msg:entry.msg, type:entry.type });
+        if (state.log.length > 250) state.log.shift();
+        appendLogEntry({ ts:entry.ts, msg:entry.msg, type:entry.type });
       });
   });
 
-  // ── 3. Escuta eventos visuais ──
-  // ── 4. Escuta fichas dos portadores em tempo real ──
-  const _fichaMap = { espaco:'espaco', tempo:'tempo', realidade:'realidade' };
-  Object.entries(_fichaMap).forEach(([fbKey, tipo]) => {
-    _db.ref('fichas/' + fbKey).on('value', snap => {
-      const data = snap.val();
-      if(!data) return;
-      applyFichaToState(tipo, data, true);
+  // ══ 4. EVENTOS VISUAIS (dado, marco, reação, suaVez) ══
+  _db.ref('arena/events').on('value', snap => {
+    const data = snap.val(); if (!data) return;
+    const now = Date.now();
+    Object.entries(data).forEach(([key, evt]) => {
+      if (_myWrites.events.has(key))    return; // nosso próprio evento
+      if (now - (evt.ts||0) > 8000)    return; // evento velho
+      if (_myWrites.events._seen?.has(key)) return;
+      // Marca como visto para não processar duas vezes
+      if (!_myWrites.events._seen) _myWrites.events._seen = new Set();
+      _myWrites.events._seen.add(key);
+
+      const p = evt.payload || {};
+      if (evt.type === 'roll') {
+        _applyRollDisplay(p);
+        if (p.roller) addRollToHistory(p.roller, p, '');
+      }
+      if (evt.type === 'revealRoll') {
+        const r = p;
+        const formula = `${r.qty}d${r.faces}${r.mod!==0?(r.mod>0?'+':'')+r.mod:''}`;
+        const detail  = `[${r.rolls.join(', ')}]${r.mod!==0?` + ${r.mod}`:''}`;
+        document.getElementById('roll-big').textContent    = r.total;
+        document.getElementById('roll-formula').textContent = formula+' = '+detail;
+        document.getElementById('hidden-indicator').style.display = 'none';
+        document.getElementById('reveal-row').style.display       = 'none';
+      }
+      if (evt.type === 'marco')   showMarcoOverlay(p.tipo, p.nome, p.desc);
+      if (evt.type === 'reacao')  showReacaoOverlay(p.a, p.b, p.r, p.desc);
+      if (evt.type === 'suaVez')  showSuaVez(p.nome);
     });
   });
 
-  _db.ref('arena/events').on('value', snap => {
-    const data = snap.val(); if(!data) return;
-    const now = Date.now();
-    Object.entries(data).forEach(([key,evt]) => {
-      if(_seenEvents.has(key)) return;
-      if(evt.from === _CLIENT_ID) return;        // próprio cliente
-      if(now - (evt.ts||0) > 8000) return;       // evento velho
-      _seenEvents.add(key);
-      const p = evt.payload || {};
-      if(evt.type==='roll') {
-        _applyRollDisplay(p);
-        if(p.roller) addRollToHistory(p.roller, p, '');
-      }
-      if(evt.type==='revealRoll')  {
-        const r=p; const formula=`${r.qty}d${r.faces}${r.mod!==0?(r.mod>0?'+':'')+r.mod:''}`;
-        const detail=`[${r.rolls.join(', ')}]${r.mod!==0?` + ${r.mod}`:''}`;
-        document.getElementById('roll-big').textContent=r.total;
-        document.getElementById('roll-formula').textContent=formula+' = '+detail;
-        document.getElementById('hidden-indicator').style.display='none';
-        document.getElementById('reveal-row').style.display='none';
-      }
-      if(evt.type==='marco')       showMarcoOverlay(p.tipo,p.nome,p.desc);
-      if(evt.type==='reacao')      showReacaoOverlay(p.a,p.b,p.r,p.desc);
-      if(evt.type==='suaVez')      showSuaVez(p.nome);
+  // ══ 5. FICHAS DOS PORTADORES (importadas pelo Mestre e lidas por todos) ══
+  ['espaco','tempo','realidade'].forEach(tipo => {
+    _db.ref('fichas/' + tipo).on('value', snap => {
+      const data = snap.val();
+      if (!data) return;
+      // silent=true para não chamar save() e não criar loop
+      applyFichaToState(tipo, data, true);
+      renderPortadores();
+      updateRollerLabels();
+      buildLoginModal();
     });
+  });
+
+  // ══ 6. GALERIA ══
+  _db.ref('arena/gallery').on('value', snap => {
+    const data = snap.val();
+    _galleryImages = data ? Object.values(data).sort((a,b) => (a.ts||0)-(b.ts||0)) : [];
+    renderGallery(_galleryImages);
+  });
+
+  // ══ 7. MEMÓRIAS ══
+  _db.ref('arena/memorias').on('value', snap => {
+    const data = snap.val();
+    renderMemos(data ? Object.values(data) : []);
   });
 }
 
-document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'&&!e.target.matches('input,textarea,select')) nextTurn();
-  if(e.key==='Escape'){
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.target.matches('input,textarea,select')) nextTurn();
+  if (e.key === 'Escape') {
     closeMarco(); closeReacao(); hideSuaVez();
-    document.querySelectorAll('.modal-overlay.active').forEach(m=>m.style.display='none');
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.style.display = 'none');
   }
 });
+
+// ═══════════════════════════════════════════════════════
+// NPCs / ADVERSÁRIOS
+// ═══════════════════════════════════════════════════════
+let _npcSelectedTipo = 'Inimigo';
+let _npcHpTarget = null;
+let _npcIdCounter = 0;
+
+function selectNpcTipo(btn) {
+  document.querySelectorAll('.npc-tipo-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  _npcSelectedTipo = btn.dataset.tipo;
+}
+
+function addNpc() {
+  const nome = document.getElementById('npc-nome-input').value.trim() || 'Adversário';
+  const hpMax = parseInt(document.getElementById('npc-hp-input').value) || 30;
+  const def = parseInt(document.getElementById('npc-def-input').value) || 12;
+  const init = parseInt(document.getElementById('npc-init-input').value) || 0;
+  const desc = document.getElementById('npc-desc-input').value.trim();
+  const tipo = _npcSelectedTipo;
+  const id = 'npc_' + Date.now() + '_' + (++_npcIdCounter);
+  const npc = { id, nome, tipo, hp: hpMax, hpMax, def, init, desc, conditions:[] };
+  if(!state.npcs) state.npcs = [];
+  state.npcs.push(npc);
+  // Adiciona à iniciativa
+  state.initiative.push({ id, nome, init, tipo:'npc' });
+  addLog(`👹 ${nome} (${tipo}) entrou em campo. HP: ${hpMax}`, 'damage');
+  closeModal('modal-npc');
+  // Reset form
+  document.getElementById('npc-nome-input').value = '';
+  document.getElementById('npc-hp-input').value = '30';
+  document.getElementById('npc-def-input').value = '12';
+  document.getElementById('npc-init-input').value = '0';
+  document.getElementById('npc-desc-input').value = '';
+  renderAll(); save(); saveInitiative();
+  updateNpcCount();
+}
+
+function removeNpc(id) {
+  const npc = state.npcs.find(n => n.id === id);
+  if(npc) addLog(`💀 ${npc.nome} foi derrotado e removido.`, 'damage');
+  state.npcs = state.npcs.filter(n => n.id !== id);
+  state.initiative = state.initiative.filter(e => e.id !== id);
+  if(state.turn >= state.initiative.length) state.turn = Math.max(0, state.initiative.length - 1);
+  renderAll(); save(); saveInitiative();
+  updateNpcCount();
+}
+
+function openNpcHPModal(id) {
+  const npc = state.npcs.find(n => n.id === id);
+  if(!npc) return;
+  _npcHpTarget = id;
+  document.getElementById('modal-npc-hp-title').textContent = `⚔ Dano / Cura — ${npc.nome}`;
+  document.getElementById('modal-npc-hp-val').value = '';
+  openModal('modal-npc-hp');
+}
+
+function applyNpcHP(kind) {
+  const val = parseInt(document.getElementById('modal-npc-hp-val').value) || 0;
+  if(!_npcHpTarget || !val) { closeModal('modal-npc-hp'); return; }
+  const npc = state.npcs.find(n => n.id === _npcHpTarget);
+  if(!npc) { closeModal('modal-npc-hp'); return; }
+  if(kind === 'damage') {
+    npc.hp = Math.max(0, npc.hp - val);
+    addLog(`${npc.nome} sofreu ${val} de dano. HP: ${npc.hp}/${npc.hpMax}`, 'damage');
+    if(npc.hp === 0) addLog(`💀 ${npc.nome} está no chão!`, 'damage');
+  } else {
+    npc.hp = Math.min(npc.hpMax, npc.hp + val);
+    addLog(`${npc.nome} recuperou ${val} HP. (${npc.hp}/${npc.hpMax})`, 'heal');
+  }
+  closeModal('modal-npc-hp');
+  renderNpcs(); save();
+}
+
+function updateNpcInitiative(npcId, newInit) {
+  const npc = state.npcs.find(n => n.id === npcId);
+  if(npc) npc.init = newInit;
+  const ie = state.initiative.find(e => e.id === npcId);
+  if(ie) ie.init = newInit;
+  save(); saveInitiative();
+}
+
+function toggleNpcCond(npcId, cond) {
+  const npc = state.npcs.find(n => n.id === npcId);
+  if(!npc) return;
+  const idx = npc.conditions.indexOf(cond);
+  if(idx > -1) npc.conditions.splice(idx, 1);
+  else { npc.conditions.push(cond); addLog(`Condição "${cond}" aplicada em ${npc.nome}.`, 'default'); }
+  renderNpcs(); save();
+}
+
+function renameNpc(id, nome) {
+  const npc = state.npcs.find(n => n.id === id);
+  if(npc) { npc.nome = nome; }
+  const ie = state.initiative.find(e => e.id === id);
+  if(ie) ie.nome = nome;
+  save(); saveInitiative(); renderInitiative();
+}
+
+function updateNpcCount() {
+  const badge = document.getElementById('npc-count');
+  if(badge) badge.textContent = state.npcs?.length > 0 ? state.npcs.length : '';
+}
+
+// ── Badge personalizado por tipo de NPC ──
+const NPC_TIPO_CFG = {
+  'Inimigo': { icon:'⚔',  cls:'tipo-inimigo', label:'Inimigo' },
+  'Elite':   { icon:'⭐', cls:'tipo-elite',   label:'Elite'   },
+  'Chefe':   { icon:'💀', cls:'tipo-chefe',   label:'Chefe'   },
+  'Minion':  { icon:'👥', cls:'tipo-minion',  label:'Minion'  },
+  'Neutro':  { icon:'🤝', cls:'tipo-neutro',  label:'Neutro'  },
+  'Aliado':  { icon:'🛡', cls:'tipo-aliado',  label:'Aliado'  },
+};
+function getNpcTipoBadge(tipo) {
+  const cfg = NPC_TIPO_CFG[tipo] || { icon:'⚔', cls:'tipo-inimigo', label: tipo };
+  return `<span class="npc-tipo-badge ${cfg.cls}">${cfg.icon} ${cfg.label}</span>`;
+}
+function getNpcTipoCls(tipo) {
+  return NPC_TIPO_CFG[tipo]?.cls || 'tipo-inimigo';
+}
+
+function renderNpcs() {
+  const grid = document.getElementById('npc-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  if(!state.npcs || state.npcs.length === 0) {
+    grid.innerHTML = '<div class="npc-empty" id="npc-empty">Nenhum adversário em campo</div>';
+    updateNpcCount(); return;
+  }
+  state.npcs.forEach(npc => {
+    const isCurrent = state.initiative[state.turn]?.id === npc.id;
+    const hpPct = Math.max(0, Math.min(100, (npc.hp / npc.hpMax) * 100));
+    const hpColor = hpPct > 50 ? '#e74c3c' : hpPct > 25 ? '#e67e22' : '#c0392b';
+    const tipoCls = getNpcTipoCls(npc.tipo);
+    const card = document.createElement('div');
+    card.className = `npc-card-full ${tipoCls}${isCurrent ? ' active-npc' : ''}`;
+    card.id = `npc-card-${npc.id}`;
+    card.innerHTML = `
+      <div class="npc-topline-full ${tipoCls}"></div>
+      <div class="npc-head-full">
+        <div class="npc-gem ${tipoCls}"></div>
+        <div class="npc-info-full">
+          <input class="npc-edit-input" value="${npc.nome}" onchange="renameNpc('${npc.id}',this.value)" style="font-family:var(--display);font-size:.72rem;font-weight:700;background:transparent;border:none;padding:0;color:#fff;width:100%;" onfocus="this.style.borderBottom='1px solid var(--gold-b)'" onblur="this.style.borderBottom='none'">
+          <div style="display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap">
+            ${getNpcTipoBadge(npc.tipo)}
+            ${npc.def ? `<span style="font-family:var(--mono);font-size:.36rem;color:var(--tx3);letter-spacing:.08em">DEF ${npc.def}</span>` : ''}
+          </div>
+        </div>
+        <div class="npc-init-badge" title="Iniciativa">⚡${npc.init}</div>
+      </div>
+      <div class="npc-bars-full">
+        <div class="npc-bar-meta-full">
+          <span>⚔ HP</span><span style="color:${hpColor}">${npc.hp} / ${npc.hpMax}</span>
+        </div>
+        <div class="npc-bar-track-full">
+          <div class="npc-bar-fill-full" style="width:${hpPct}%;background:${
+            npc.tipo==='Chefe'   ? `linear-gradient(90deg,#4a006e,#a020d0,#c060ff)` :
+            npc.tipo==='Elite'   ? `linear-gradient(90deg,#7a5000,${hpColor},#e8c44a)` :
+            npc.tipo==='Aliado'  ? `linear-gradient(90deg,#005030,#20a060,#6de8a8)` :
+            npc.tipo==='Neutro'  ? `linear-gradient(90deg,#003060,#2080c0,#80c8f0)` :
+                                   `linear-gradient(90deg,#7a0000,${hpColor})`
+          }"></div>
+        </div>
+      </div>
+      ${npc.conditions.length ? `<div class="npc-conds">${npc.conditions.map(c=>`<div class="npc-cond-chip" onclick="toggleNpcCond('${npc.id}','${c}')">${c} ✕</div>`).join('')}</div>` : ''}
+      <div class="npc-controls-full">
+        <div class="npc-ctrl-row">
+          <button class="npc-ctrl-btn dmg" onclick="openNpcHPModal('${npc.id}')">⚔ Dano</button>
+          <button class="npc-ctrl-btn heal" onclick="openNpcHPModal('${npc.id}')">✦ Curar</button>
+        </div>
+        <div class="npc-ctrl-row">
+          <div style="display:flex;align-items:center;gap:4px;grid-column:1/-1">
+            <span style="font-family:var(--mono);font-size:.38rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Init:</span>
+            <input class="npc-edit-input" type="number" value="${npc.init}" style="width:52px;text-align:center" onchange="updateNpcInitiative('${npc.id}',parseInt(this.value)||0)">
+            <button class="npc-ctrl-btn" style="flex:1" onclick="openNpcCondModal('${npc.id}')">Condições</button>
+          </div>
+        </div>
+        ${npc.desc ? `<div style="font-family:var(--serif);font-size:.75rem;color:var(--tx3);font-style:italic;padding:2px 0;margin-top:2px">${npc.desc}</div>` : ''}
+        <button class="npc-ctrl-btn del wide" onclick="removeNpc('${npc.id}')">💀 Remover</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+  updateNpcCount();
+}
+
+// Modal de condições para NPC
+let _npcCondTarget = null;
+function openNpcCondModal(id) {
+  _npcCondTarget = id;
+  const npc = state.npcs.find(n => n.id === id);
+  if(!npc) return;
+  // Inline modal simples
+  const existing = document.getElementById('npc-cond-inline');
+  if(existing) existing.remove();
+  const card = document.getElementById(`npc-card-${id}`);
+  if(!card) return;
+  const div = document.createElement('div');
+  div.id = 'npc-cond-inline';
+  div.style.cssText = 'position:fixed;z-index:8000;background:var(--card);border:1px solid var(--br2);border-radius:8px;padding:12px;display:flex;flex-wrap:wrap;gap:4px;max-width:280px;box-shadow:0 8px 40px rgba(0,0,0,.5)';
+  const rect = card.getBoundingClientRect();
+  div.style.left = Math.min(rect.left, window.innerWidth - 300) + 'px';
+  div.style.top = (rect.top - 10) + 'px';
+  CONDICOES.forEach(c => {
+    const active = npc.conditions.includes(c);
+    const btn = document.createElement('button');
+    btn.style.cssText = `background:${active?'rgba(240,92,92,.15)':'var(--bg3)'};border:1px solid ${active?'rgba(240,92,92,.4)':'var(--br)'};border-radius:3px;color:${active?'var(--real)':'var(--tx3)'};font-family:var(--mono);font-size:.38rem;padding:3px 7px;cursor:pointer;text-transform:uppercase;transition:all .15s`;
+    btn.textContent = c;
+    btn.onclick = () => { toggleNpcCond(id, c); div.remove(); };
+    div.appendChild(btn);
+  });
+  const closeBtn = document.createElement('button');
+  closeBtn.style.cssText = 'background:transparent;border:1px solid var(--br);border-radius:3px;color:var(--tx3);font-family:var(--mono);font-size:.38rem;padding:3px 8px;cursor:pointer;width:100%;margin-top:4px';
+  closeBtn.textContent = '✕ Fechar';
+  closeBtn.onclick = () => div.remove();
+  div.appendChild(closeBtn);
+  document.body.appendChild(div);
+  setTimeout(() => document.addEventListener('click', function h(e){if(!div.contains(e.target)){div.remove();document.removeEventListener('click',h);}}, {capture:true}), 100);
+}
+
+// ═══════════════════════════════════════════════════════
+// GALERIA DE IMAGENS — sincronizada via Firebase Storage base64
+// ═══════════════════════════════════════════════════════
+const _MAX_IMG_SIZE = 400; // px — reduz antes de salvar
+
+function uploadGalleryImage(input) {
+  const file = input.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const origSrc = e.target.result;
+    // Redimensiona para economizar espaço
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ratio = Math.min(1, _MAX_IMG_SIZE / Math.max(img.width, img.height));
+      canvas.width = Math.round(img.width * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      const compressed = canvas.toDataURL('image/jpeg', 0.82);
+      const entry = {
+        id: 'img_' + Date.now(),
+        src: compressed,
+        name: file.name.replace(/\.[^.]+$/, ''),
+        ts: Date.now(),
+      };
+      _pushGalleryImage(entry);
+    };
+    img.src = origSrc;
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+function _pushGalleryImage(entry) {
+  if(!_db) return;
+  _db.ref('arena/gallery/' + entry.id).set(entry)
+    .then(() => addLog(`🖼 Imagem "${entry.name}" adicionada à galeria.`, 'default'))
+    .catch(console.error);
+}
+
+function deleteGalleryImage(id) {
+  if(!_db) return;
+  _db.ref('arena/gallery/' + id).remove().catch(console.error);
+}
+
+function renderGallery(images) {
+  const strip = document.getElementById('img-gallery-strip');
+  if(!strip) return;
+  strip.innerHTML = '';
+  if(!images || images.length === 0) return;
+  images.forEach(img => {
+    const wrap = document.createElement('div');
+    wrap.className = 'gallery-thumb';
+    wrap.title = img.name;
+    wrap.innerHTML = `
+      <img src="${img.src}" alt="${img.name}" onclick="openLightbox('${img.id}')">
+      <button class="gallery-thumb-del" onclick="event.stopPropagation();deleteGalleryImage('${img.id}')" title="Remover">✕</button>`;
+    strip.appendChild(wrap);
+  });
+}
+
+// Lightbox
+let _galleryImages = [];
+function openLightbox(id) {
+  const img = _galleryImages.find(i => i.id === id);
+  if(!img) return;
+  document.getElementById('img-lightbox-img').src = img.src;
+  document.getElementById('img-lightbox-caption').textContent = img.name;
+  document.getElementById('img-lightbox').classList.add('active');
+}
+function closeLightbox() {
+  document.getElementById('img-lightbox').classList.remove('active');
+}
+
+// ═══════════════════════════════════════════════════════
+// MEMÓRIAS DE DOCUMENTO — Firebase
+// ═══════════════════════════════════════════════════════
+const MEMO_TAGS = {
+  nota:'📝', segredo:'🔒', missao:'⚔', npc:'👤', lugar:'🗺', item:'🎒', regra:'📜'
+};
+
+function saveMemo() {
+  const titulo = document.getElementById('memo-titulo-input').value.trim();
+  const corpo = document.getElementById('memo-corpo-input').value.trim();
+  const tag = document.getElementById('memo-tag-input').value;
+  if(!titulo && !corpo) return;
+  const entry = {
+    id: 'memo_' + Date.now(),
+    titulo: titulo || '(sem título)',
+    corpo,
+    tag,
+    ts: Date.now(),
+    autor: state.mode === 'mestre' ? 'Mestre' : (state.portadores[currentRoller]?.nome || currentRoller),
+  };
+  if(_db) {
+    _db.ref('arena/memorias/' + entry.id).set(entry)
+      .then(() => {
+        document.getElementById('memo-titulo-input').value = '';
+        document.getElementById('memo-corpo-input').value = '';
+        addLog(`📖 Memória "${entry.titulo}" registrada.`, 'default');
+      }).catch(console.error);
+  }
+}
+
+function deleteMemo(id) {
+  if(!_db) return;
+  _db.ref('arena/memorias/' + id).remove().catch(console.error);
+}
+
+function renderMemos(memos) {
+  const list = document.getElementById('memo-list');
+  if(!list) return;
+  list.innerHTML = '';
+  if(!memos || memos.length === 0) {
+    list.innerHTML = '<div class="memo-empty">Nenhuma memória registrada ainda.</div>';
+    return;
+  }
+  memos.sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  memos.forEach(m => {
+    const icon = MEMO_TAGS[m.tag] || '📝';
+    const d = new Date(m.ts || 0);
+    const ts = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+    const card = document.createElement('div');
+    card.className = 'memo-card';
+    card.innerHTML = `
+      <div class="memo-card-title">
+        <span>${icon} ${m.titulo}</span>
+        <button class="memo-card-del" onclick="deleteMemo('${m.id}')" title="Deletar">✕</button>
+      </div>
+      ${m.corpo ? `<div class="memo-card-body">${m.corpo}</div>` : ''}
+      <div class="memo-card-ts"><span class="memo-tag">${icon} ${m.tag}</span>${ts} · ${m.autor || ''}</div>`;
+    list.appendChild(card);
+  });
+}
+
+
 </script>
 
-<!-- Firebase Compat SDK (síncrono, sem module, sem problema de timing) -->
+<!-- Firebase Compat SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
-// Inicia a arena depois que os SDKs carregaram
 window.addEventListener('load', () => initArena());
 </script>
 </body>
