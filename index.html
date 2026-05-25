@@ -2,7 +2,10 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#04040a">
 <title>Arena · Os 3 Caídos</title>
 <!-- Firebase PRIMEIRO — síncrono, antes de qualquer script do jogo -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -728,6 +731,280 @@ body[class*="clima-"] #clima-active-badge{display:flex}
 .reacao-preview{background:var(--bg3);border:1px solid var(--br2);border-radius:6px;padding:12px;text-align:center;margin-bottom:12px;min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:all .3s}
 .rp-nome{font-family:var(--display);font-size:1rem;font-weight:700;color:#fff}
 .rp-desc{font-family:var(--serif);font-size:.82rem;color:var(--tx2);font-style:italic}
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE & iPHONE — adicionado para experiência touch
+   ══════════════════════════════════════════════════════════ */
+
+/* Safe area para iPhone com notch/Dynamic Island */
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* Impede zoom acidental em inputs no iOS */
+input, select, textarea {
+  font-size: max(16px, 1em) !important;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Botões touch-friendly — mínimo 44px de área tátil */
+button, .ctrl-btn, .die-btn, .sh-btn, .top-btn,
+.arena-tab, .tc-btn, .modal-btn, .npc-btn,
+.cond-toggle, .clima-btn, .vis-btn, .roller-btn {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Melhor scroll no iOS */
+#arena-content, #side, .log-scroll, .img-gallery-strip {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── MOBILE LAYOUT (≤ 768px) ── */
+@media (max-width: 768px) {
+  html, body { overflow: hidden; height: 100%; height: 100dvh; }
+
+  #app {
+    grid-template-rows: auto 1fr auto;
+    height: 100dvh;
+  }
+
+  /* TOPBAR compacta */
+  #topbar {
+    padding: 8px 12px;
+    padding-top: calc(8px + var(--safe-top));
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  #topbar::-webkit-scrollbar { display: none; }
+  .topbar-title { font-size: .62rem; }
+  .topbar-sub { display: none; }
+  .top-btn { font-size: .44rem; padding: 5px 8px; white-space: nowrap; }
+  #player-identity-badge { font-size: .4rem; padding: 3px 7px; }
+  #fb-dot { width: 7px; height: 7px; }
+
+  /* LAYOUT: coluna única no mobile */
+  #main {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ARENA — ocupa tela toda com abas */
+  #arena {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Abas maiores para toque */
+  #arena-tabs {
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  #arena-tabs::-webkit-scrollbar { display: none; }
+  .arena-tab {
+    padding: 12px 10px;
+    font-size: .4rem;
+    flex-shrink: 0;
+    min-width: 72px;
+  }
+
+  #arena-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+  /* PORTADORES: 1 coluna no mobile */
+  .portadores-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* NPCs: 1 coluna */
+  .npc-grid { grid-template-columns: 1fr; }
+
+  /* Botões ctrl maiores */
+  .ctrl-btn { padding: 10px 6px; font-size: .48rem; }
+  .afi-step-btn { padding: 6px 10px; font-size: .85rem; }
+
+  /* GALERIA menor no mobile */
+  #img-gallery-bar { padding: 8px 12px; }
+  .gallery-thumb img { width: 60px; height: 50px; }
+  .img-upload-btn { width: 50px; height: 50px; }
+
+  /* SIDE: vira uma aba extra na parte de baixo — hidden por padrão */
+  #side {
+    display: none; /* escondido, acesso via modal lateral */
+  }
+
+  /* BOTTOM BAR: safe area bottom + botão de painel lateral */
+  #bottombar {
+    padding: 8px 12px;
+    padding-bottom: calc(8px + var(--safe-bottom));
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+  .tc-btn { font-size: .44rem; padding: 8px 10px; }
+  .tc-btn.next { font-size: .48rem; padding: 8px 14px; }
+  .turn-display { font-size: .42rem; }
+  .round-ctr { font-size: .42rem; }
+
+  /* BOTÃO PAINEL LATERAL no bottombar */
+  #mobile-side-toggle {
+    display: flex !important;
+  }
+
+  /* MODAL LATERAL para ferramentas (dice, init, cond) */
+  #mobile-side-drawer {
+    display: flex !important;
+  }
+
+  /* Modals full-width no mobile */
+  .modal {
+    width: 94vw !important;
+    max-width: 94vw !important;
+    max-height: 90dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modal.wide { width: 94vw !important; }
+  .modal-overlay {
+    align-items: flex-end;
+    padding-bottom: var(--safe-bottom);
+  }
+  .modal {
+    border-radius: 16px 16px 0 0 !important;
+    margin: 0;
+    padding-bottom: calc(22px + var(--safe-bottom));
+  }
+
+  /* NPC modal tipo grid */
+  .npc-modal-tipo-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Reação modal */
+  .reacao-pair-select { grid-template-columns: 1fr auto 1fr; gap: 4px; }
+
+  /* MARCO overlay texto menor */
+  .marco-title { font-size: 2rem; }
+  .reacao-nome { font-size: 2.2rem; }
+  .marco-desc, .reacao-desc { font-size: .9rem; padding: 0 20px; }
+
+  /* Roll display compacto */
+  .roll-big { font-size: 2.8rem; }
+
+  /* Login modal */
+  #modal-login .modal, #modal-login-inner { min-width: unset !important; }
+
+  /* Condições: chips maiores */
+  .cond-toggle { padding: 6px 10px; font-size: .46rem; }
+
+  /* Iniciativa: input maior */
+  .init-val-input { width: 46px; padding: 5px; font-size: .7rem; }
+
+  /* Sua vez banner — ajuste para notch */
+  #sua-vez-banner { padding-top: calc(10px + var(--safe-top)); }
+}
+
+/* ── MOBILE DRAWER (painel lateral em gaveta) ── */
+#mobile-side-toggle {
+  display: none;
+  background: var(--gold-d);
+  border: 1px solid var(--gold-b);
+  border-radius: 4px;
+  color: var(--gold);
+  font-family: var(--mono);
+  font-size: .44rem;
+  letter-spacing: .1em;
+  padding: 7px 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all .2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+#mobile-side-toggle:active { opacity: .7; }
+
+#mobile-side-drawer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+}
+#mobile-side-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(4px);
+}
+#mobile-side-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: min(88vw, 340px);
+  background: var(--bg2);
+  border-left: 1px solid var(--br2);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+#mobile-side-drawer.open #mobile-side-panel {
+  transform: translateX(0);
+}
+#mobile-side-drawer.open {
+  display: flex !important;
+}
+#mobile-side-close {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: rgba(4,4,10,.95);
+  border-bottom: 1px solid var(--br2);
+  backdrop-filter: blur(10px);
+}
+#mobile-side-close span {
+  font-family: var(--display);
+  font-size: .52rem;
+  letter-spacing: .14em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+#mobile-side-close button {
+  background: none;
+  border: 1px solid var(--br2);
+  border-radius: 4px;
+  color: var(--tx2);
+  font-family: var(--mono);
+  font-size: .5rem;
+  padding: 4px 10px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── DESKTOP: esconde elementos mobile ── */
+@media (min-width: 769px) {
+  #mobile-side-toggle { display: none !important; }
+  #mobile-side-drawer { display: none !important; }
+  #nav-sidebar { display: flex; }
+}
+
 </style>
 </head>
 <body>
@@ -1177,6 +1454,7 @@ function closeFichas(){ document.getElementById('modal-fichas').classList.remove
     <div class="turn-display">Vez de: <strong id="current-turn-name">—</strong></div>
     <div class="bottombar-spacer"></div>
     <div class="round-ctr">Round <strong id="round-num">1</strong></div>
+    <button id="mobile-side-toggle" onclick="openMobileSide()">🎲 Ferramentas</button>
   </div>
 </div>
 
@@ -1367,6 +1645,34 @@ function confirmLogin() {
   closeModal('modal-login');
   setRoller(currentRoller);
   renderAll(); rebuildLog();
+
+  // ── Dado de entrada: rola d20 público para todos ao entrar ──
+  setTimeout(() => _rollEntrada(tipo), 600);
+}
+
+function _rollEntrada(tipo) {
+  const faces = 20;
+  const resultado = Math.floor(Math.random() * faces) + 1;
+  const isCrit = resultado === 20;
+  const isFail = resultado === 1;
+  const roller = tipo === 'mestre' ? 'mestre' : tipo;
+  const nomeRoller = roller === 'mestre'
+    ? '👑 Mestre'
+    : `${EL[roller]?.icon || ''} ${state.portadores[roller]?.nome || roller}`;
+  const sufixo = isCrit ? ' 🌟 CRÍTICO DE ENTRADA!' : isFail ? ' 💀 FALHA DE ENTRADA!' : '';
+  const logMsg = `🎲 ${nomeRoller} entrou na arena e rolou 1d20 = ${resultado}${sufixo}`;
+  addLog(logMsg, 'roll');
+  const rollData = {
+    faces, qty: 1, mod: 0,
+    rolls: [resultado], total: resultado,
+    secret: false, isCrit, isFail,
+    roller,
+  };
+  state.lastRoll = { ...rollData };
+  addRollToHistory(roller, rollData, logMsg);
+  _applyRollDisplay(rollData);
+  _emit('roll', rollData);
+  save();
 }
 
 function updatePlayerIdentityBadge(tipo, portador) {
@@ -1680,6 +1986,15 @@ function renderPortadores() {
       ${p.conditions.length ? `<div class="p-conds">${p.conditions.map(c => `<div class="cond-chip" onclick="removeCondPortador('${tipo}','${c}')">${c} ✕</div>`).join('')}</div>` : ''}
 
       <div class="p-controls">
+        <!-- Ajuste rápido de HP — sincronizado para todos -->
+        <div style="font-family:var(--mono);font-size:.4rem;letter-spacing:.12em;color:var(--tx3);text-transform:uppercase;margin-bottom:2px">Vida Rápida</div>
+        <div class="afi-stepper" style="margin-bottom:5px">
+          <button class="afi-step-btn" onclick="quickHP('${tipo}',-5)" title="-5" style="color:var(--real)">−5</button>
+          <button class="afi-step-btn" onclick="quickHP('${tipo}',-1)" title="-1" style="color:var(--real)">−1</button>
+          <span class="afi-step-label" style="color:#e07070;font-weight:700">${p.hp}</span>
+          <button class="afi-step-btn" onclick="quickHP('${tipo}',+1)" title="+1" style="color:var(--tempo)">+1</button>
+          <button class="afi-step-btn" onclick="quickHP('${tipo}',+5)" title="+5" style="color:var(--tempo)">+5</button>
+        </div>
         <div class="ctrl-row">
           <button class="ctrl-btn damage" onclick="openHPModal('${tipo}','damage')">⚔ Dano</button>
           <button class="ctrl-btn heal" onclick="openHPModal('${tipo}','heal')">✦ Curar</button>
@@ -1691,7 +2006,7 @@ function renderPortadores() {
           <button class="afi-step-btn" onclick="adjustAfi('${tipo}',-10)" title="-10">−10</button>
           <button class="afi-step-btn" onclick="adjustAfi('${tipo}',-5)" title="-5">−5</button>
           <button class="afi-step-btn" onclick="adjustAfi('${tipo}',-1)" title="-1">−1</button>
-          <span class="afi-step-label">Afi</span>
+          <span class="afi-step-label" style="font-weight:700;color:var(--el)">${p.afi}</span>
           <button class="afi-step-btn" onclick="adjustAfi('${tipo}',+1)" title="+1">+1</button>
           <button class="afi-step-btn" onclick="adjustAfi('${tipo}',+5)" title="+5">+5</button>
           <button class="afi-step-btn" onclick="adjustAfi('${tipo}',+10)" title="+10">+10</button>
@@ -2221,6 +2536,18 @@ function adjustCorr(tipo, delta) {
   else addLog(`${p.nome} — Corrupção: ${p.corr}`, 'default');
   renderAll(); save();
 }
+function quickHP(tipo, delta) {
+  const p = state.portadores[tipo];
+  if(delta < 0) {
+    p.hp = Math.max(0, p.hp + delta);
+    addLog(`${p.nome} sofreu ${Math.abs(delta)} de dano rápido. (PV: ${p.hp}/${p.hpMax})`, 'damage');
+  } else {
+    p.hp = Math.min(p.hpMax, p.hp + delta);
+    addLog(`${p.nome} recuperou ${delta} PV. (${p.hp}/${p.hpMax})`, 'heal');
+  }
+  renderAll(); save();
+}
+
 function toggleHideStatus(tipo) {
   state.hiddenStatuses[tipo] = !state.hiddenStatuses[tipo];
   addLog(state.hiddenStatuses[tipo] ? `👁 Status de ${state.portadores[tipo].nome} ocultado.` : `👁 Status de ${state.portadores[tipo].nome} revelado.`, 'gm-only');
@@ -2354,14 +2681,19 @@ function revealLastRoll() {
 function animateDie(faces, result, isSecret) {
   const anim=document.getElementById('dice-anim');
   const face=document.getElementById('dice-face');
+  // Reset de qualquer animação anterior
+  anim.classList.remove('active');
+  void anim.offsetWidth;
   anim.classList.add('active');
   let t=0;
+  // Exibe números aleatórios por ~600ms, depois mostra o resultado
   const iv=setInterval(()=>{
     face.textContent=isSecret?'?':Math.floor(Math.random()*faces)+1;
     t++;
-    if(t>9){clearInterval(iv);face.textContent=isSecret?'?':result;}
+    if(t>9){ clearInterval(iv); face.textContent=isSecret?'?':result; }
   },60);
-  setTimeout(()=>anim.classList.remove('active'),950);
+  // Remove overlay após animação — NÃO toca no #roll-big, que é gerenciado por _applyRollDisplay
+  setTimeout(()=>{ anim.classList.remove('active'); }, 900);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2682,7 +3014,8 @@ function initArena() {
     renderAll();
     updateRollerLabels();
     buildLoginModal();
-    if (state.lastRoll) _applyRollDisplay({ ...state.lastRoll, isCrit:false, isFail:false });
+    // NÃO chama _applyRollDisplay aqui — isso causava o dado "rebugando"
+    // toda vez que HP/afi mudava. O dado só é exibido via evento 'roll'.
     _statusBar('🟢 Arena Online', true);
   });
 
@@ -2775,6 +3108,7 @@ function initArena() {
     const data = snap.val();
     renderMemos(data ? Object.values(data) : []);
   });
+
 }
 
 document.addEventListener('keydown', e => {
@@ -3239,6 +3573,113 @@ function renderMemos(memos) {
 <script>
 // DOM pronto, Firebase já carregado no head — inicia direto
 initArena();
+
+// ══════════════════════════════════════════════════════════
+// MOBILE / iPHONE — Painel lateral em gaveta
+// ══════════════════════════════════════════════════════════
+function isMobile() { return window.innerWidth <= 768; }
+
+function openMobileSide() {
+  if (!isMobile()) return;
+  const drawer = document.getElementById('mobile-side-drawer');
+  const content = document.getElementById('mobile-side-content');
+  // Clona o conteúdo do #side para dentro do drawer
+  const side = document.getElementById('side');
+  if (side && content.innerHTML === '') {
+    content.innerHTML = side.innerHTML;
+    // Rebinda os eventos (selects, inputs, etc.)
+    // Os onclick inline já funcionam pois são globais
+  }
+  drawer.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMobileSide() {
+  const drawer = document.getElementById('mobile-side-drawer');
+  drawer.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Fecha drawer com swipe para direita
+(function() {
+  let startX = 0, dragging = false;
+  document.addEventListener('touchstart', e => {
+    const panel = document.getElementById('mobile-side-panel');
+    if (!panel) return;
+    const rect = panel.getBoundingClientRect();
+    if (e.touches[0].clientX > rect.left) {
+      startX = e.touches[0].clientX;
+      dragging = true;
+    }
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (!dragging) return;
+    dragging = false;
+    const endX = e.changedTouches[0].clientX;
+    if (endX - startX > 60) closeMobileSide();
+  }, { passive: true });
+})();
+
+// Impede que o body role quando um modal está aberto no iOS
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.add('active');
+  m.style.display = 'flex';
+  if (isMobile()) document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.remove('active');
+  m.style.display = 'none';
+  if (isMobile()) document.body.style.overflow = '';
+}
+
+// Sincroniza o conteúdo do drawer quando há renderização
+const _origRenderAll = typeof renderAll === 'function' ? renderAll : null;
+function syncMobileDrawer() {
+  const drawer = document.getElementById('mobile-side-drawer');
+  if (!drawer || !drawer.classList.contains('open')) return;
+  const content = document.getElementById('mobile-side-content');
+  const side = document.getElementById('side');
+  if (side && content) {
+    content.innerHTML = side.innerHTML;
+  }
+}
+
+// Patch no renderAll para sincronizar drawer
+if (typeof window !== 'undefined') {
+  window.addEventListener('load', () => {
+    // Nada extra necessário — os renders já atualizam o #side
+  });
+}
+
+// Previne rubber-band scroll no iOS no elemento raiz
+document.addEventListener('touchmove', e => {
+  if (e.target === document.documentElement || e.target === document.body) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+// Melhora o tap nos botões de dado para resposta imediata
+document.querySelectorAll('.die-btn').forEach(btn => {
+  btn.addEventListener('touchstart', () => {}, { passive: true });
+});
+
 </script>
+
+<!-- ══ MOBILE SIDE DRAWER ══ -->
+<div id="mobile-side-drawer" onclick="if(event.target===this||event.target.id==='mobile-side-backdrop')closeMobileSide()">
+  <div id="mobile-side-backdrop"></div>
+  <div id="mobile-side-panel" id="mobile-side-panel-inner">
+    <div id="mobile-side-close">
+      <span>🎲 Ferramentas</span>
+      <button onclick="closeMobileSide()">✕ Fechar</button>
+    </div>
+    <!-- conteúdo copiado do #side via JS -->
+    <div id="mobile-side-content"></div>
+  </div>
+</div>
 </body>
 </html>
