@@ -318,6 +318,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
     <button class="hfbtn" data-filter="Ação Principal" onclick="filterHabs(this,'Ação Principal')">Ação Principal</button>
     <button class="hfbtn" data-filter="Ação Bônus" onclick="filterHabs(this,'Ação Bônus')">Ação Bônus</button>
     <button class="hfbtn" data-filter="Reação" onclick="filterHabs(this,'Reação')">Reação</button>
+    <button class="hfbtn" data-filter="Ação de Movimento" onclick="filterHabs(this,'Ação de Movimento')">Ação de Movimento</button>
     <button class="hfbtn" data-filter="Ação Completa" onclick="filterHabs(this,'Ação Completa')">Ação Completa</button>
     <button class="hfbtn" data-filter="Passiva" onclick="filterHabs(this,'Passiva')">Passiva</button>
   </div>
@@ -337,7 +338,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
         <div class="hab-cost"><label>Custo Afi</label><input type="text" placeholder="0"></div>
         <div class="hab-type"><label>Tipo de Ação</label>
           <select onchange="onHabTypeChange(this)">
-            <option>Ação Principal</option><option>Ação Bônus</option><option>Reação</option><option>Ação Completa</option><option>Passiva</option>
+            <option>Ação Principal</option><option>Ação de Movimento</option><option>Ação Bônus</option><option>Reação</option><option>Ação Completa</option><option>Passiva</option>
           </select>
         </div>
         <button class="hab-del-btn" onclick="delHab(this)" title="Deletar habilidade">✕</button>
@@ -591,7 +592,7 @@ function addHab(){
       <div class="hab-cost"><label>Custo Afi</label><input type="text" placeholder="0"></div>
       <div class="hab-type"><label>Tipo de Ação</label>
         <select onchange="onHabTypeChange(this)">
-          <option>Ação Principal</option><option>Ação Bônus</option><option>Reação</option><option>Ação Completa</option><option>Passiva</option>
+          <option>Ação Principal</option><option>Ação de Movimento</option><option>Ação Bônus</option><option>Reação</option><option>Ação Completa</option><option>Passiva</option>
         </select>
       </div>
       <button class="hab-del-btn" onclick="delHab(this)" title="Deletar">✕</button>
@@ -703,7 +704,7 @@ function collectData(){
     const qty=item.querySelector('.inv-qty')?.value||'1';
     inv.push({nome,qty});
   });
-  return {fixed,chips,habs,inv};
+  return {fixed,chips,habs,inv,_savedAt:Date.now()};
 }
 
 function scheduleSave(){
@@ -755,7 +756,7 @@ function applyData(data){
           <div class="hab-cost"><label>Custo Afi</label><input type="text" value="${escH(h.custo)}" placeholder="0"></div>
           <div class="hab-type"><label>Tipo de A\u00e7\u00e3o</label>
             <select onchange="onHabTypeChange(this)">
-              ${['A\u00e7\u00e3o Principal','A\u00e7\u00e3o B\u00f4nus','Rea\u00e7\u00e3o','A\u00e7\u00e3o Completa','Passiva'].map(o=>`<option${o===h.tipo?' selected':''}>${o}</option>`).join('')}
+              ${['A\u00e7\u00e3o Principal','A\u00e7\u00e3o de Movimento','A\u00e7\u00e3o B\u00f4nus','Rea\u00e7\u00e3o','A\u00e7\u00e3o Completa','Passiva'].map(o=>`<option${o===h.tipo?' selected':''}>${o}</option>`).join('')}
             </select>
           </div>
           <button class="hab-del-btn" onclick="delHab(this)" title="Deletar">\u2715</button>
@@ -820,24 +821,40 @@ function clearData(){
 
 function loadData(){
   const s=document.getElementById('save-status');
-  s.textContent='Carregando…'; s.className='save-status';
+  // 1. Carrega local imediatamente — sem esperar rede
+  const raw=localStorage.getItem(SAVE_KEY);
+  if(raw){
+    try{ applyData(JSON.parse(raw)); s.textContent='Carregado localmente'; s.className='save-status saved'; }catch(e){}
+  } else {
+    s.textContent='Carregando…'; s.className='save-status';
+  }
+  // 2. Sincroniza com Firebase em background
   _db.ref(FB_PATH).once('value')
     .then(snap=>{
       const data=snap.val();
       if(data){
-        applyData(data);
-        s.textContent='Carregado da nuvem ✓'; s.className='save-status saved';
-        setTimeout(()=>updateStatusBar(),2000);
+        // Usa nuvem só se for mais recente (tem _savedAt maior) ou se não havia local
+        const localTs = raw ? (JSON.parse(raw)._savedAt||0) : 0;
+        const cloudTs = data._savedAt||0;
+        if(!raw || cloudTs > localTs){
+          applyData(data);
+          localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+          s.textContent='Sincronizado da nuvem ✓'; s.className='save-status saved';
+          setTimeout(()=>updateStatusBar(),2500);
+        } else {
+          s.textContent='Local mais recente – nuvem ignorada'; s.className='save-status saved';
+          setTimeout(()=>updateStatusBar(),2500);
+        }
       } else {
-        const raw=localStorage.getItem(SAVE_KEY);
-        if(raw){ try{ applyData(JSON.parse(raw)); }catch(e){} }
-        s.textContent='Sem dados na nuvem'; s.className='save-status';
+        if(raw){ s.textContent='Salvo localmente ✓'; s.className='save-status saved'; }
+        else { s.textContent='Sem dados salvos'; s.className='save-status'; }
+        setTimeout(()=>updateStatusBar(),2000);
       }
     })
     .catch(()=>{
-      const raw=localStorage.getItem(SAVE_KEY);
-      if(raw){ try{ applyData(JSON.parse(raw)); }catch(e){} }
-      s.textContent='Offline — dados locais'; s.className='save-status';
+      if(raw){ s.textContent='Offline — dados locais ✓'; s.className='save-status saved'; }
+      else { s.textContent='Offline — sem dados locais'; s.className='save-status'; }
+      setTimeout(()=>updateStatusBar(),2500);
     });
 }
 </script>
