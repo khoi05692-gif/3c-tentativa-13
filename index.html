@@ -2640,36 +2640,49 @@ function initArena() {
   let _firstStateLoad     = true;
   let _firstInitLoad      = true;
 
-  // ══ 1. ESTADO PRINCIPAL (portadores, npcs, clima, dado) ══
+  // ══ 1. ESTADO PRINCIPAL ══
   _db.ref('arena/state').on('value', snap => {
-    // Só ignora echo após o primeiro load já ter acontecido
-    if (!_firstStateLoad && Date.now() - _myWrites.state < 800) return;
-
     const data = snap.val();
 
-    if (!data) {
-      // Banco vazio — primeira sessão, só o Mestre inicializa
-      if (_firstStateLoad) {
-        _firstStateLoad = false;
-        openModal('modal-import');
+    // Primeiro carregamento
+    if (_firstStateLoad) {
+      _firstStateLoad = false;
+
+      if (!data) {
+        // Banco vazio — inicializa e salva sem bloquear o próximo evento
+        _myWrites.state = 0; // não bloqueia
         addLog('Arena iniciada. Que os 3 Caídos lutem.', 'marco');
-        save();
+        // Salva direto sem debounce
+        if (_db) _db.ref('arena').update({
+          state: _buildSaveObj(),
+          initiative: { list: state.initiative, turn: 0, round: 0 },
+        }).catch(console.error);
+        openModal('modal-import');
         _statusBar('🟢 Arena Online — nova sessão', true);
+        return;
       }
+
+      // Banco com dados — aplica e renderiza
+      _applyRemote(data);
+      renderAll();
+      updateRollerLabels();
+      buildLoginModal();
+      if (state.lastRoll) _applyRollDisplay({ ...state.lastRoll, isCrit:false, isFail:false });
+      closeModal('modal-import');
+      previewReacao();
+      _statusBar('🟢 Arena Online', true);
       return;
     }
+
+    // Updates subsequentes — ignora eco das nossas próprias escritas
+    if (Date.now() - _myWrites.state < 800) return;
+    if (!data) return;
 
     _applyRemote(data);
     renderAll();
     updateRollerLabels();
     buildLoginModal();
     if (state.lastRoll) _applyRollDisplay({ ...state.lastRoll, isCrit:false, isFail:false });
-
-    if (_firstStateLoad) {
-      _firstStateLoad = false;
-      closeModal('modal-import');
-      previewReacao();
-    }
     _statusBar('🟢 Arena Online', true);
   });
 
