@@ -10,8 +10,10 @@
 <!-- Firebase PRIMEIRO — síncrono, antes de qualquer script do jogo -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;700&display=swap&display=swap">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;700&display=swap');
 :root{
   --bg:#04040a;--bg2:#07070f;--bg3:#0a0a16;--bg4:#0e0e1c;
   --card:rgba(8,8,18,.97);
@@ -3025,16 +3027,26 @@ function initArena() {
   });
 
   // ══ 4. EVENTOS VISUAIS (dado, marco, reação, suaVez) ══
+  // Carrega eventos já vistos desta sessão (persiste entre reloads no mobile)
+  const _seenEventsKey = 'arena_seen_events';
+  const _seenEvents = new Set();
+  try {
+    const raw = sessionStorage.getItem(_seenEventsKey);
+    if (raw) JSON.parse(raw).forEach(k => _seenEvents.add(k));
+  } catch(e) {}
+
   _db.ref('arena/events').on('value', snap => {
     const data = snap.val(); if (!data) return;
     const now = Date.now();
     Object.entries(data).forEach(([key, evt]) => {
-      if (_myWrites.events.has(key))    return; // nosso próprio evento
-      if (now - (evt.ts||0) > 8000)    return; // evento velho
-      if (_myWrites.events._seen?.has(key)) return;
-      // Marca como visto para não processar duas vezes
-      if (!_myWrites.events._seen) _myWrites.events._seen = new Set();
-      _myWrites.events._seen.add(key);
+      if (_myWrites.events.has(key))          return; // nosso próprio evento
+      if (now - (evt.ts||0) > 3000)           return; // evento com mais de 3s — ignora
+      if (_seenEvents.has(key)) return; // já processado
+      // Marca como visto e persiste na sessão
+      _seenEvents.add(key);
+      try {
+        sessionStorage.setItem(_seenEventsKey, JSON.stringify([..._seenEvents]));
+      } catch(e) {}
 
       const p = evt.payload || {};
       if (evt.type === 'roll') {
