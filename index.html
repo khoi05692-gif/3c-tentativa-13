@@ -2790,6 +2790,7 @@ document.addEventListener('keydown', e => {
 // ═══════════════════════════════════════════════════════
 let _npcSelectedTipo = 'Inimigo';
 let _npcHpTarget = null;
+let _npcHpKind = 'damage';
 let _npcIdCounter = 0;
 
 function selectNpcTipo(btn) {
@@ -2833,11 +2834,12 @@ function removeNpc(id) {
   updateNpcCount();
 }
 
-function openNpcHPModal(id) {
+function openNpcHPModal(id, kind) {
   const npc = state.npcs.find(n => n.id === id);
   if(!npc) return;
   _npcHpTarget = id;
-  document.getElementById('modal-npc-hp-title').textContent = `⚔ Dano / Cura — ${npc.nome}`;
+  _npcHpKind = kind || 'damage';
+  document.getElementById('modal-npc-hp-title').textContent = `${kind==='heal'?'✦ Curar':'⚔ Dano'} — ${npc.nome}`;
   document.getElementById('modal-npc-hp-val').value = '';
   openModal('modal-npc-hp');
 }
@@ -2919,52 +2921,145 @@ function renderNpcs() {
     const hpPct = Math.max(0, Math.min(100, (npc.hp / npc.hpMax) * 100));
     const hpColor = hpPct > 50 ? '#e74c3c' : hpPct > 25 ? '#e67e22' : '#c0392b';
     const tipoCls = getNpcTipoCls(npc.tipo);
+
+    const hpBarBg =
+      npc.tipo==='Chefe'  ? 'linear-gradient(90deg,#4a006e,#a020d0,#c060ff)' :
+      npc.tipo==='Elite'  ? `linear-gradient(90deg,#7a5000,${hpColor},#e8c44a)` :
+      npc.tipo==='Aliado' ? 'linear-gradient(90deg,#005030,#20a060,#6de8a8)' :
+      npc.tipo==='Neutro' ? 'linear-gradient(90deg,#003060,#2080c0,#80c8f0)' :
+                            `linear-gradient(90deg,#7a0000,${hpColor})`;
+
     const card = document.createElement('div');
     card.className = `npc-card-full ${tipoCls}${isCurrent ? ' active-npc' : ''}`;
     card.id = `npc-card-${npc.id}`;
-    card.innerHTML = `
-      <div class="npc-topline-full ${tipoCls}"></div>
-      <div class="npc-head-full">
-        <div class="npc-gem ${tipoCls}"></div>
-        <div class="npc-info-full">
-          <input class="npc-edit-input" value="${npc.nome}" onchange="renameNpc('${npc.id}',this.value)" style="font-family:var(--display);font-size:.72rem;font-weight:700;background:transparent;border:none;padding:0;color:#fff;width:100%;" onfocus="this.style.borderBottom='1px solid var(--gold-b)'" onblur="this.style.borderBottom='none'">
-          <div style="display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap">
-            ${getNpcTipoBadge(npc.tipo)}
-            ${npc.def ? `<span style="font-family:var(--mono);font-size:.36rem;color:var(--tx3);letter-spacing:.08em">DEF ${npc.def}</span>` : ''}
-          </div>
-        </div>
-        <div class="npc-init-badge" title="Iniciativa">⚡${npc.init}</div>
+
+    // ── Topline
+    const topline = document.createElement('div');
+    topline.className = `npc-topline-full ${tipoCls}`;
+    card.appendChild(topline);
+
+    // ── Cabeçalho
+    const head = document.createElement('div');
+    head.className = 'npc-head-full';
+
+    const gem = document.createElement('div');
+    gem.className = `npc-gem ${tipoCls}`;
+    head.appendChild(gem);
+
+    const info = document.createElement('div');
+    info.className = 'npc-info-full';
+
+    const nomeInput = document.createElement('input');
+    nomeInput.className = 'npc-edit-input';
+    nomeInput.value = npc.nome;
+    nomeInput.style.cssText = 'font-family:var(--display);font-size:.72rem;font-weight:700;background:transparent;border:none;padding:0;color:#fff;width:100%;border-bottom:1px solid transparent;transition:border-color .2s';
+    nomeInput.addEventListener('focus', () => nomeInput.style.borderBottomColor = 'var(--gold-b)');
+    nomeInput.addEventListener('blur',  () => nomeInput.style.borderBottomColor = 'transparent');
+    nomeInput.addEventListener('change', () => renameNpc(npc.id, nomeInput.value));
+    info.appendChild(nomeInput);
+
+    const badges = document.createElement('div');
+    badges.style.cssText = 'display:flex;align-items:center;gap:5px;margin-top:3px;flex-wrap:wrap';
+    badges.innerHTML = getNpcTipoBadge(npc.tipo);
+    if(npc.def) {
+      const defSpan = document.createElement('span');
+      defSpan.style.cssText = 'font-family:var(--mono);font-size:.36rem;color:var(--tx3);letter-spacing:.08em';
+      defSpan.textContent = `DEF ${npc.def}`;
+      badges.appendChild(defSpan);
+    }
+    info.appendChild(badges);
+    head.appendChild(info);
+
+    const initBadge = document.createElement('div');
+    initBadge.className = 'npc-init-badge';
+    initBadge.title = 'Iniciativa';
+    initBadge.textContent = `⚡${npc.init}`;
+    head.appendChild(initBadge);
+    card.appendChild(head);
+
+    // ── Barra HP
+    const bars = document.createElement('div');
+    bars.className = 'npc-bars-full';
+    bars.innerHTML = `
+      <div class="npc-bar-meta-full">
+        <span>⚔ HP</span><span style="color:${hpColor}">${npc.hp} / ${npc.hpMax}</span>
       </div>
-      <div class="npc-bars-full">
-        <div class="npc-bar-meta-full">
-          <span>⚔ HP</span><span style="color:${hpColor}">${npc.hp} / ${npc.hpMax}</span>
-        </div>
-        <div class="npc-bar-track-full">
-          <div class="npc-bar-fill-full" style="width:${hpPct}%;background:${
-            npc.tipo==='Chefe'   ? `linear-gradient(90deg,#4a006e,#a020d0,#c060ff)` :
-            npc.tipo==='Elite'   ? `linear-gradient(90deg,#7a5000,${hpColor},#e8c44a)` :
-            npc.tipo==='Aliado'  ? `linear-gradient(90deg,#005030,#20a060,#6de8a8)` :
-            npc.tipo==='Neutro'  ? `linear-gradient(90deg,#003060,#2080c0,#80c8f0)` :
-                                   `linear-gradient(90deg,#7a0000,${hpColor})`
-          }"></div>
-        </div>
-      </div>
-      ${npc.conditions.length ? `<div class="npc-conds">${npc.conditions.map(c=>`<div class="npc-cond-chip" onclick="toggleNpcCond('${npc.id}','${c}')">${c} ✕</div>`).join('')}</div>` : ''}
-      <div class="npc-controls-full">
-        <div class="npc-ctrl-row">
-          <button class="npc-ctrl-btn dmg" onclick="openNpcHPModal('${npc.id}')">⚔ Dano</button>
-          <button class="npc-ctrl-btn heal" onclick="openNpcHPModal('${npc.id}')">✦ Curar</button>
-        </div>
-        <div class="npc-ctrl-row">
-          <div style="display:flex;align-items:center;gap:4px;grid-column:1/-1">
-            <span style="font-family:var(--mono);font-size:.38rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Init:</span>
-            <input class="npc-edit-input" type="number" value="${npc.init}" style="width:52px;text-align:center" onchange="updateNpcInitiative('${npc.id}',parseInt(this.value)||0)">
-            <button class="npc-ctrl-btn" style="flex:1" onclick="openNpcCondModal('${npc.id}')">Condições</button>
-          </div>
-        </div>
-        ${npc.desc ? `<div style="font-family:var(--serif);font-size:.75rem;color:var(--tx3);font-style:italic;padding:2px 0;margin-top:2px">${npc.desc}</div>` : ''}
-        <button class="npc-ctrl-btn del wide" onclick="removeNpc('${npc.id}')">💀 Remover</button>
+      <div class="npc-bar-track-full">
+        <div class="npc-bar-fill-full" style="width:${hpPct}%;background:${hpBarBg}"></div>
       </div>`;
+    card.appendChild(bars);
+
+    // ── Condições ativas
+    if(npc.conditions && npc.conditions.length) {
+      const conds = document.createElement('div');
+      conds.className = 'npc-conds';
+      npc.conditions.forEach(c => {
+        const chip = document.createElement('div');
+        chip.className = 'npc-cond-chip';
+        chip.textContent = `${c} ✕`;
+        chip.addEventListener('click', () => toggleNpcCond(npc.id, c));
+        conds.appendChild(chip);
+      });
+      card.appendChild(conds);
+    }
+
+    // ── Controles
+    const ctrl = document.createElement('div');
+    ctrl.className = 'npc-controls-full';
+
+    // Dano / Cura
+    const row1 = document.createElement('div');
+    row1.className = 'npc-ctrl-row';
+    const btnDmg = document.createElement('button');
+    btnDmg.className = 'npc-ctrl-btn dmg';
+    btnDmg.textContent = '⚔ Dano';
+    btnDmg.addEventListener('click', () => openNpcHPModal(npc.id, 'damage'));
+    const btnHeal = document.createElement('button');
+    btnHeal.className = 'npc-ctrl-btn heal';
+    btnHeal.textContent = '✦ Curar';
+    btnHeal.addEventListener('click', () => openNpcHPModal(npc.id, 'heal'));
+    row1.appendChild(btnDmg); row1.appendChild(btnHeal);
+    ctrl.appendChild(row1);
+
+    // Init + Condições
+    const row2 = document.createElement('div');
+    row2.className = 'npc-ctrl-row';
+    const initRow = document.createElement('div');
+    initRow.style.cssText = 'display:flex;align-items:center;gap:4px;grid-column:1/-1';
+    const initLabel = document.createElement('span');
+    initLabel.style.cssText = 'font-family:var(--mono);font-size:.38rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap';
+    initLabel.textContent = 'Init:';
+    const initInput = document.createElement('input');
+    initInput.className = 'npc-edit-input';
+    initInput.type = 'number';
+    initInput.value = npc.init;
+    initInput.style.cssText = 'width:52px;text-align:center';
+    initInput.addEventListener('change', () => updateNpcInitiative(npc.id, parseInt(initInput.value)||0));
+    const btnCond = document.createElement('button');
+    btnCond.className = 'npc-ctrl-btn';
+    btnCond.style.flex = '1';
+    btnCond.textContent = 'Condições';
+    btnCond.addEventListener('click', () => openNpcCondModal(npc.id));
+    initRow.appendChild(initLabel); initRow.appendChild(initInput); initRow.appendChild(btnCond);
+    row2.appendChild(initRow);
+    ctrl.appendChild(row2);
+
+    // Descrição
+    if(npc.desc) {
+      const descDiv = document.createElement('div');
+      descDiv.style.cssText = 'font-family:var(--serif);font-size:.75rem;color:var(--tx3);font-style:italic;padding:2px 0;margin-top:2px';
+      descDiv.textContent = npc.desc;
+      ctrl.appendChild(descDiv);
+    }
+
+    // Remover
+    const btnDel = document.createElement('button');
+    btnDel.className = 'npc-ctrl-btn del wide';
+    btnDel.textContent = '💀 Remover';
+    btnDel.addEventListener('click', () => removeNpc(npc.id));
+    ctrl.appendChild(btnDel);
+
+    card.appendChild(ctrl);
     grid.appendChild(card);
   });
   updateNpcCount();
