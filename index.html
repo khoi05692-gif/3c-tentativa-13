@@ -1646,33 +1646,7 @@ function confirmLogin() {
   setRoller(currentRoller);
   renderAll(); rebuildLog();
 
-  // ── Dado de entrada: rola d20 público para todos ao entrar ──
-  setTimeout(() => _rollEntrada(tipo), 600);
-}
 
-function _rollEntrada(tipo) {
-  const faces = 20;
-  const resultado = Math.floor(Math.random() * faces) + 1;
-  const isCrit = resultado === 20;
-  const isFail = resultado === 1;
-  const roller = tipo === 'mestre' ? 'mestre' : tipo;
-  const nomeRoller = roller === 'mestre'
-    ? '👑 Mestre'
-    : `${EL[roller]?.icon || ''} ${state.portadores[roller]?.nome || roller}`;
-  const sufixo = isCrit ? ' 🌟 CRÍTICO DE ENTRADA!' : isFail ? ' 💀 FALHA DE ENTRADA!' : '';
-  const logMsg = `🎲 ${nomeRoller} entrou na arena e rolou 1d20 = ${resultado}${sufixo}`;
-  addLog(logMsg, 'roll');
-  const rollData = {
-    faces, qty: 1, mod: 0,
-    rolls: [resultado], total: resultado,
-    secret: false, isCrit, isFail,
-    roller,
-  };
-  state.lastRoll = { ...rollData };
-  addRollToHistory(roller, rollData, logMsg);
-  _applyRollDisplay(rollData);
-  _emit('roll', rollData);
-  save();
 }
 
 function updatePlayerIdentityBadge(tipo, portador) {
@@ -2999,7 +2973,6 @@ function initArena() {
       renderAll();
       updateRollerLabels();
       buildLoginModal();
-      // Não exibe dado da sessão anterior ao carregar
       closeModal('modal-import');
       previewReacao();
       _statusBar('🟢 Arena Online', true);
@@ -3571,7 +3544,6 @@ function renderMemos(memos) {
 
 </script>
 <script>
-// Aguarda DOM completo antes de iniciar (crítico no mobile)
 document.addEventListener('DOMContentLoaded', function() {
   initArena();
 });
@@ -3585,8 +3557,7 @@ function openMobileSide() {
   if (!isMobile()) return;
   const drawer = document.getElementById('mobile-side-drawer');
   const content = document.getElementById('mobile-side-content');
-  // Sempre sincroniza o conteúdo do #side ao abrir
-  // (garante HP, afi e dados atualizados)
+  // Clona o conteúdo do #side para dentro do drawer
   const side = document.getElementById('side');
   if (side && content) {
     content.innerHTML = side.innerHTML;
@@ -3649,31 +3620,24 @@ function syncMobileDrawer() {
   }
 }
 
-// Patcha renderAll para sincronizar drawer quando estiver aberto
 (function() {
-  const _origRender = window.renderAll;
-  if (typeof _origRender === 'function') {
+  const _orig = window.renderAll;
+  if (typeof _orig === 'function') {
     window.renderAll = function() {
-      _origRender.apply(this, arguments);
+      _orig.apply(this, arguments);
       syncMobileDrawer();
     };
   }
 })();
 
-// Previne rubber-band scroll no iOS APENAS no elemento raiz
-// (não bloqueia scroll dentro de listas/painéis)
+// Previne rubber-band scroll no iOS no elemento raiz
 document.addEventListener('touchmove', e => {
-  // Verifica se algum ancestral é scrollável — se for, deixa passar
   let el = e.target;
   while (el && el !== document.body) {
-    const style = window.getComputedStyle(el);
-    const overflow = style.overflowY;
-    if ((overflow === 'auto' || overflow === 'scroll') && el.scrollHeight > el.clientHeight) {
-      return; // deixa o scroll nativo funcionar
-    }
+    const ov = window.getComputedStyle(el).overflowY;
+    if ((ov === 'auto' || ov === 'scroll') && el.scrollHeight > el.clientHeight) return;
     el = el.parentElement;
   }
-  // Só previne quando está no body/html mesmo
   if (e.target === document.documentElement || e.target === document.body) {
     e.preventDefault();
   }
