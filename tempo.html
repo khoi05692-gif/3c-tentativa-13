@@ -143,7 +143,7 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
 .save-status.saved{color:var(--el)}
 .btn-save{background:var(--el-d);border:1px solid var(--el-b);border-radius:var(--r);color:var(--el);font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;padding:8px 20px;cursor:pointer;text-transform:uppercase;transition:all .2s}
 .btn-save:hover{background:rgba(109,232,168,.15);box-shadow:0 0 12px rgba(109,232,168,.2)}
-@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}.hdr{flex-direction:column;text-align:center}.hdr-right{margin-left:0;text-align:center}.hab-top{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr 1fr}.hdr{flex-direction:column;text-align:center}.hdr-right{margin-left:0;text-align:center}.hab-top{display:flex;flex-wrap:wrap;gap:6px}.hab-nome{flex:1 1 100%}.hab-cost,.hab-type{flex:1 1 auto}.hab-del-btn{margin-left:auto}}
 </style>
 <!-- Firebase Compat SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -482,18 +482,6 @@ body::after{content:'';position:fixed;inset:0;background-image:url("data:image/s
   </div>
 </div>
 
-    <div style="font-family:var(--mono);font-size:.48rem;color:var(--tx3);margin-top:2px">Exporte para compartilhar · Importe para carregar</div>
-  </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <label class="btn-save" style="cursor:pointer;color:var(--tx3);border-color:var(--br)" title="Importar ficha salva">
-      Importar ↑
-      <input type="file" accept=".json" style="display:none" onchange="importData(this)">
-    </label>
-    <button class="btn-save" onclick="clearData()" style="color:var(--tx3);border-color:var(--br)">Limpar</button>
-    <button class="btn-save" onclick="exportData()">Exportar & Salvar ↓</button>
-  </div>
-</div>
-
 <script>
 const SAVE_KEY = 'ficha_tempo_3caidos_v1';
 const EL_TAGS = ['Aceleração','Desaceleração','Reversão','Visão'];
@@ -704,7 +692,11 @@ function collectData(){
     const qty=item.querySelector('.inv-qty')?.value||'1';
     inv.push({nome,qty});
   });
-  return {fixed,chips,habs,inv,_savedAt:Date.now()};
+  const marcos=[];
+  document.querySelectorAll('#marcos-container .marco').forEach((m,i)=>{
+    marcos.push({i,checked:m.querySelector('.marco-check input[type=checkbox]')?.checked||false});
+  });
+  return {fixed,chips,habs,inv,marcos,_savedAt:Date.now()};
 }
 
 function scheduleSave(){
@@ -774,6 +766,13 @@ function applyData(data){
       const d=document.createElement('div'); d.className='inv-item';
       d.innerHTML=`<input type="text" value="${escH(it.nome)}" placeholder="Item / po\u00e7\u00e3o\u2026"><input class="inv-qty" type="number" min="0" value="${it.qty}"><button class="inv-del" onclick="delInv(this)">\u2715</button>`;
       document.getElementById('inv-list').appendChild(d);
+    });
+  }
+  if(data.marcos){
+    const mcs=document.querySelectorAll('#marcos-container .marco');
+    data.marcos.forEach(({i,checked})=>{
+      const cb=mcs[i]?.querySelector('.marco-check input[type=checkbox]');
+      if(cb) cb.checked=checked;
     });
   }
   updateDerived();
