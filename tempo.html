@@ -4,8 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ficha — Tempo · Os 3 Caídos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;700&display=swap">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@300;400;700&display=swap');
 :root{
   --el:#6de8a8;--el-d:rgba(109,232,168,.08);--el-b:rgba(109,232,168,.28);--el-g:rgba(109,232,168,.5);
   --bg:#07070d;--bg2:#0b0b14;--bg3:#0f0f1c;--bg4:#13131f;
@@ -701,24 +703,26 @@ function collectData(){
 
 function scheduleSave(){
   clearTimeout(_saveTimer);
-  _saveTimer = setTimeout(()=>saveData(), 1500);
+  _saveTimer = setTimeout(()=>saveData(), 800);
 }
 
 function saveData(){
   const data = collectData();
   const json = JSON.stringify(data);
   localStorage.setItem(SAVE_KEY, json);
-  if(_fbConnected){
-    _db.ref(FB_PATH).set(data)
-      .then(()=>{
-        const s=document.getElementById('save-status');
-        s.textContent='Salvo na nuvem ✓'; s.className='save-status saved';
-      })
-      .catch(err=>{
-        const s=document.getElementById('save-status');
-        s.textContent='Erro ao salvar!'; s.className='save-status';
-      });
-  }
+  // Sempre tenta salvar no Firebase — SDK gerencia fila offline automaticamente
+  _db.ref(FB_PATH).set(data)
+    .then(()=>{
+      const s=document.getElementById('save-status');
+      s.textContent='Salvo na nuvem ✓'; s.className='save-status saved';
+      setTimeout(()=>updateStatusBar(),3000);
+    })
+    .catch(err=>{
+      const s=document.getElementById('save-status');
+      // Falhou mas está no localStorage — não é perda de dados
+      s.textContent='Salvo localmente (sem rede)'; s.className='save-status saved';
+      setTimeout(()=>updateStatusBar(),3000);
+    });
 }
 
 function applyData(data){
@@ -827,37 +831,39 @@ function loadData(){
   } else {
     s.textContent='Carregando…'; s.className='save-status';
   }
-  // 2. Sincroniza com Firebase em background
+  // 2. Sincroniza com Firebase — usa o dado mais recente entre local e nuvem
   _db.ref(FB_PATH).once('value')
     .then(snap=>{
       const data=snap.val();
-      if(data){
-        // Usa nuvem só se for mais recente (tem _savedAt maior) ou se não havia local
-        const localTs = raw ? (JSON.parse(raw)._savedAt||0) : 0;
-        const cloudTs = data._savedAt||0;
-        if(!raw || cloudTs > localTs){
-          applyData(data);
-          localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-          s.textContent='Sincronizado da nuvem ✓'; s.className='save-status saved';
-          setTimeout(()=>updateStatusBar(),2500);
-        } else {
-          s.textContent='Local mais recente – nuvem ignorada'; s.className='save-status saved';
-          setTimeout(()=>updateStatusBar(),2500);
-        }
+      let localTs = 0;
+      try { localTs = raw ? (JSON.parse(raw)._savedAt||0) : 0; } catch(e){}
+      const cloudTs = data?._savedAt||0;
+      if(data && cloudTs >= localTs){
+        // Nuvem é igual ou mais recente — usa nuvem
+        applyData(data);
+        localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+        s.textContent='Sincronizado da nuvem ✓'; s.className='save-status saved';
+      } else if(raw){
+        // Local é mais recente — mantém local e sobe para nuvem
+        s.textContent='Dados locais mais recentes ✓'; s.className='save-status saved';
+        saveData(); // sobe o local para nuvem
       } else {
-        if(raw){ s.textContent='Salvo localmente ✓'; s.className='save-status saved'; }
-        else { s.textContent='Sem dados salvos'; s.className='save-status'; }
-        setTimeout(()=>updateStatusBar(),2000);
+        s.textContent='Sem dados salvos'; s.className='save-status';
       }
+      setTimeout(()=>updateStatusBar(),3000);
     })
     .catch(()=>{
+      // Sem rede — usa local se tiver
       if(raw){ s.textContent='Offline — dados locais ✓'; s.className='save-status saved'; }
       else { s.textContent='Offline — sem dados locais'; s.className='save-status'; }
-      setTimeout(()=>updateStatusBar(),2500);
+      setTimeout(()=>updateStatusBar(),3000);
     });
 }
 </script>
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+});
 document.addEventListener('input', e => {
   if(e.target.matches('input,textarea,select')) scheduleSave();
 });
